@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Coding Practice — CareerCopilot</title>
+<link rel="stylesheet" href="css/designsystem.css">
+<link rel="stylesheet" href="css/appshell.css">
+<link rel="stylesheet" href="css/app.css">
+<link rel="stylesheet" href="css/chatbot.css">
+</head>
+<body>
+<div class="app">
+
+  <div class="sidebar-overlay"></div>
+  <aside class="sidebar">
+    <a href="index.html" class="brand"><span class="brand-mark">CC</span> CareerCopilot</a>
+    <nav class="side-nav">
+      <a href="dashboard.html" class="side-link"><span class="ic">🏠</span> Dashboard</a>
+      <a href="coding.html" class="side-link active"><span class="ic">💻</span> Coding Practice</a>
+      <a href="aptitude.html" class="side-link"><span class="ic">🧮</span> Aptitude Hub</a>
+      <a href="interview.html" class="side-link"><span class="ic">🎤</span> Interview Prep</a>
+      <a href="resume.html" class="side-link"><span class="ic">📄</span> Resume Master</a>
+      <a href="companies.html" class="side-link"><span class="ic">🏢</span> Company Prep</a>
+      <a href="planner.html" class="side-link"><span class="ic">🗓️</span> Study Planner</a>
+      <a href="achievements.html" class="side-link"><span class="ic">🏅</span> Achievements</a>
+      <a href="analytics.html" class="side-link"><span class="ic">📊</span> Analytics</a>
+      <a href="settings.html" class="side-link"><span class="ic">⚙️</span> Settings</a>
+    </nav>
+    <div class="side-foot">
+      <div class="side-user">
+        <div class="avatar" id="side-avatar">AS</div>
+        <div class="meta"><b id="side-name">Aman Sharma</b><span id="side-rank">Beginner Explorer</span></div>
+      </div>
+    </div>
+  </aside>
+
+  <main class="main">
+    <header class="topbar">
+      <div class="flex items-center gap-16">
+        <button class="menu-toggle btn-icon">☰</button>
+        <div>
+          <h1>Coding Practice</h1>
+          <div class="topbar-sub">Master DSA with 150+ curated problems</div>
+        </div>
+      </div>
+      <div class="topbar-actions">
+        <button class="theme-toggle" aria-label="Toggle theme"></button>
+      </div>
+    </header>
+
+    <div class="content" id="coding-content">
+      <!-- Problem List View -->
+      <div id="problem-list-view">
+        <!-- Stats Bar -->
+        <div class="stats-row mb-6">
+          <div class="stat-card primary">
+            <div class="stat-card-label">Total Solved</div>
+            <div class="stat-card-value" id="coding-solved">0</div>
+            <div class="stat-card-delta up">/ 150</div>
+          </div>
+          <div class="stat-card success">
+            <div class="stat-card-label">Easy</div>
+            <div class="stat-card-value" id="easy-solved">0</div>
+            <div class="stat-card-delta up">/ 50</div>
+          </div>
+          <div class="stat-card warning">
+            <div class="stat-card-label">Medium</div>
+            <div class="stat-card-value" id="medium-solved">0</div>
+            <div class="stat-card-delta up">/ 60</div>
+          </div>
+          <div class="stat-card accent">
+            <div class="stat-card-label">Hard</div>
+            <div class="stat-card-value" id="hard-solved">0</div>
+            <div class="stat-card-delta up">/ 40</div>
+          </div>
+        </div>
+
+        <div class="flex gap-6" style="align-items: flex-start;">
+          <!-- Left Sidebar Filters -->
+          <div class="card" style="width: 280px; padding: var(--space-4); flex-shrink: 0;">
+            <h3 style="margin-bottom: var(--space-4); font-size: var(--text-base);">Filters</h3>
+            
+            <!-- Search -->
+            <div class="form-group mb-4">
+              <input type="text" id="search-input" class="form-input" placeholder="Search problems..." style="width: 100%;">
+            </div>
+
+            <!-- Difficulty Filter -->
+            <div class="mb-4">
+              <label style="display: block; margin-bottom: var(--space-2); font-size: var(--text-sm); font-weight: 600; color: var(--text-primary);">Difficulty</label>
+              <div class="flex-col gap-2">
+                <label class="flex items-center gap-2" style="cursor: pointer;">
+                  <input type="checkbox" class="difficulty-filter" value="all" checked>
+                  <span style="font-size: var(--text-sm); color: var(--text-secondary);">All</span>
+                </label>
+                <label class="flex items-center gap-2" style="cursor: pointer;">
+                  <input type="checkbox" class="difficulty-filter" value="easy">
+                  <span style="font-size: var(--text-sm); color: var(--text-secondary);">Easy</span>
+                </label>
+                <label class="flex items-center gap-2" style="cursor: pointer;">
+                  <input type="checkbox" class="difficulty-filter" value="medium">
+                  <span style="font-size: var(--text-sm); color: var(--text-secondary);">Medium</span>
+                </label>
+                <label class="flex items-center gap-2" style="cursor: pointer;">
+                  <input type="checkbox" class="difficulty-filter" value="hard">
+                  <span style="font-size: var(--text-sm); color: var(--text-secondary);">Hard</span>
+                </label>
+              </div>
+            </div>
+
+            <!-- Topic Filter -->
+            <div class="mb-4">
+              <label style="display: block; margin-bottom: var(--space-2); font-size: var(--text-sm); font-weight: 600; color: var(--text-primary);">Topics</label>
+              <select id="topic-filter" class="form-select" style="width: 100%;">
+                <option value="all">All Topics</option>
+                <option value="Arrays">Arrays</option>
+                <option value="Strings">Strings</option>
+                <option value="Linked Lists">Linked Lists</option>
+                <option value="Stacks">Stacks</option>
+                <option value="Queues">Queues</option>
+                <option value="Trees">Trees</option>
+                <option value="BST">BST</option>
+                <option value="Graphs">Graphs</option>
+                <option value="DP">Dynamic Programming</option>
+                <option value="Recursion">Recursion</option>
+                <option value="Backtracking">Backtracking</option>
+                <option value="Greedy">Greedy</option>
+                <option value="Heaps">Heaps</option>
+                <option value="Tries">Tries</option>
+                <option value="Sliding Window">Sliding Window</option>
+                <option value="Two Pointers">Two Pointers</option>
+                <option value="Sorting">Sorting</option>
+                <option value="Searching">Searching</option>
+                <option value="Hashing">Hashing</option>
+              </select>
+            </div>
+
+            <!-- Status Filter -->
+            <div class="mb-4">
+              <label style="display: block; margin-bottom: var(--space-2); font-size: var(--text-sm); font-weight: 600; color: var(--text-primary);">Status</label>
+              <select id="status-filter" class="form-select" style="width: 100%;">
+                <option value="all">All Status</option>
+                <option value="completed">Completed</option>
+                <option value="pending">Pending</option>
+                <option value="bookmarked">Bookmarked</option>
+              </select>
+            </div>
+
+            <button class="btn btn-primary btn-block" onclick="applyFilters()">Apply Filters</button>
+          </div>
+
+          <!-- Problem List -->
+          <div style="flex: 1;">
+            <div class="card" style="padding: 0;">
+              <div style="padding: var(--space-4); border-bottom: 1px solid var(--border);">
+                <div class="flex justify-between items-center">
+                  <span style="color: var(--text-secondary); font-size: var(--text-sm);">Showing <span id="problem-count">0</span> problems</span>
+                  <select id="sort-select" class="form-select" style="width: auto;">
+                    <option value="default">Default</option>
+                    <option value="difficulty">Difficulty</option>
+                    <option value="topic">Topic</option>
+                    <option value="completed">Completion</option>
+                  </select>
+                </div>
+              </div>
+              <div id="problems-container" style="max-height: 600px; overflow-y: auto;">
+                <!-- Problems will be rendered here -->
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Problem Detail View (Hidden by default) -->
+      <div id="problem-detail-view" style="display: none;">
+        <button class="btn btn-ghost mb-4" onclick="showProblemList()">← Back to Problems</button>
+        
+        <div class="flex gap-6" style="align-items: flex-start;">
+          <!-- Problem Description -->
+          <div class="card" style="flex: 1; padding: var(--space-6);">
+            <div class="flex items-center gap-3 mb-4">
+              <span class="badge" id="detail-difficulty">Easy</span>
+              <span class="tag" id="detail-topic">Arrays</span>
+              <button class="btn-icon" id="detail-bookmark-btn" onclick="toggleBookmarkProblem()" style="margin-left: auto;">☆</button>
+            </div>
+            
+            <h2 id="detail-title" style="margin-bottom: var(--space-4);">Two Sum</h2>
+            
+            <div id="detail-description" style="margin-bottom: var(--space-4); color: var(--text-secondary); line-height: 1.7;">
+              <!-- Description will be rendered here -->
+            </div>
+
+            <div class="divider mb-4"></div>
+
+            <h4 style="margin-bottom: var(--space-2);">Constraints</h4>
+            <div id="detail-constraints" style="margin-bottom: var(--space-4); color: var(--text-secondary); font-family: 'JetBrains Mono', monospace; font-size: var(--text-sm);">
+              <!-- Constraints will be rendered here -->
+            </div>
+
+            <div class="divider mb-4"></div>
+
+            <h4 style="margin-bottom: var(--space-2);">Sample Input</h4>
+            <div id="detail-sample-input" style="margin-bottom: var(--space-4); background: var(--bg-elevated); padding: var(--space-3); border-radius: var(--radius-md); font-family: 'JetBrains Mono', monospace; font-size: var(--text-sm);">
+              <!-- Sample input will be rendered here -->
+            </div>
+
+            <h4 style="margin-bottom: var(--space-2);">Sample Output</h4>
+            <div id="detail-sample-output" style="margin-bottom: var(--space-4); background: var(--bg-elevated); padding: var(--space-3); border-radius: var(--radius-md); font-family: 'JetBrains Mono', monospace; font-size: var(--text-sm);">
+              <!-- Sample output will be rendered here -->
+            </div>
+
+            <div class="divider mb-4"></div>
+
+            <h4 style="margin-bottom: var(--space-2);">Explanation</h4>
+            <div id="detail-explanation" style="margin-bottom: var(--space-4); color: var(--text-secondary);">
+              <!-- Explanation will be rendered here -->
+            </div>
+
+            <div class="divider mb-4"></div>
+
+            <h4 style="margin-bottom: var(--space-2);">Hints</h4>
+            <div id="detail-hints" style="margin-bottom: var(--space-4); color: var(--text-secondary);">
+              <!-- Hints will be rendered here -->
+            </div>
+
+            <div class="divider mb-4"></div>
+
+            <h4 style="margin-bottom: var(--space-2);">Companies Asked</h4>
+            <div id="detail-companies" style="margin-bottom: var(--space-4);">
+              <!-- Companies will be rendered here -->
+            </div>
+          </div>
+
+          <!-- Code Editor -->
+          <div class="card" style="width: 600px; padding: 0; flex-shrink: 0; display: flex; flex-direction: column;">
+            <div style="padding: var(--space-4); border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center;">
+              <select id="language-select" class="form-select" style="width: auto;">
+                <option value="python">Python</option>
+                <option value="javascript">JavaScript</option>
+                <option value="java">Java</option>
+                <option value="cpp">C++</option>
+                <option value="c">C</option>
+              </select>
+              <div class="flex gap-2">
+                <button class="btn btn-sm btn-secondary" onclick="resetCode()">Reset</button>
+              </div>
+            </div>
+            <div id="monaco-editor-container" style="flex: 1; min-height: 400px; border: none;"></div>
+            <div style="padding: var(--space-4); border-top: 1px solid var(--border);">
+              <div class="flex gap-3">
+                <button class="btn btn-secondary" onclick="runCode()">▶ Run Code</button>
+                <button class="btn btn-primary" onclick="submitCode()">✓ Submit</button>
+              </div>
+            </div>
+            
+            <!-- Output Console -->
+            <div style="padding: var(--space-4); border-top: 1px solid var(--border);">
+              <div class="flex justify-between items-center mb-2">
+                <h4 style="font-size: var(--text-sm); margin: 0;">Output</h4>
+                <span id="test-results" style="font-size: var(--text-xs); color: var(--text-muted);"></span>
+              </div>
+              <div id="output-console" style="background: var(--bg-base); padding: var(--space-3); border-radius: var(--radius-md); font-family: 'JetBrains Mono', monospace; font-size: var(--text-sm); min-height: 120px; max-height: 200px; overflow-y: auto; color: var(--text-secondary); white-space: pre-wrap;">
+                Output will appear here...
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.45.0/min/vs/loader.min.js"></script>
+<script src="js/storage.js"></script>
+<script src="js/data.js"></script>
+<script src="js/theme.js"></script>
+<script src="js/main.js"></script>
+<script src="js/onboarding.js"></script>
+<script src="js/chatbot.js"></script>
+<script src="js/chatbot-ui.js"></script>
+<script src="js/coding.js"></script>
+</body>
+</html>

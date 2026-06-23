@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aptitude Hub — CareerCopilot</title>
+<link rel="stylesheet" href="css/designsystem.css">
+<link rel="stylesheet" href="css/appshell.css">
+<link rel="stylesheet" href="css/app.css">
+<link rel="stylesheet" href="css/chatbot.css">
+</head>
+<body>
+<div class="app">
+
+  <div class="sidebar-overlay"></div>
+  <aside class="sidebar">
+    <a href="index.html" class="brand"><span class="brand-mark">CC</span> CareerCopilot</a>
+    <nav class="side-nav">
+      <a href="dashboard.html" class="side-link"><span class="ic">🏠</span> Dashboard</a>
+      <a href="coding.html" class="side-link"><span class="ic">💻</span> Coding Practice</a>
+      <a href="aptitude.html" class="side-link active"><span class="ic">🧮</span> Aptitude Hub</a>
+      <a href="interview.html" class="side-link"><span class="ic">🎤</span> Interview Prep</a>
+      <a href="resume.html" class="side-link"><span class="ic">📄</span> Resume Master</a>
+      <a href="companies.html" class="side-link"><span class="ic">🏢</span> Company Prep</a>
+      <a href="planner.html" class="side-link"><span class="ic">🗓️</span> Study Planner</a>
+      <a href="achievements.html" class="side-link"><span class="ic">🏅</span> Achievements</a>
+      <a href="analytics.html" class="side-link"><span class="ic">📊</span> Analytics</a>
+      <a href="settings.html" class="side-link"><span class="ic">⚙️</span> Settings</a>
+    </nav>
+    <div class="side-foot">
+      <div class="side-user">
+        <div class="avatar" id="side-avatar">AS</div>
+        <div class="meta"><b id="side-name">Aman Sharma</b><span id="side-rank">Beginner Explorer</span></div>
+      </div>
+    </div>
+  </aside>
+
+  <main class="main">
+    <header class="topbar">
+      <div class="flex items-center gap-16">
+        <button class="menu-toggle btn-icon">☰</button>
+        <div>
+          <h1>Aptitude Hub</h1>
+          <div class="topbar-sub">Sharpen your quantitative, logical, and verbal skills</div>
+        </div>
+      </div>
+      <div class="topbar-actions">
+        <button class="theme-toggle" aria-label="Toggle theme"></button>
+      </div>
+    </header>
+
+    <div class="content">
+      <!-- Stats Bar -->
+      <div class="stats-row">
+        <div class="stat-card primary">
+          <div class="stat-card-label">Total Attempted</div>
+          <div class="stat-card-value" id="aptitude-total">0</div>
+          <div class="stat-card-delta up">/ 30</div>
+        </div>
+        <div class="stat-card success">
+          <div class="stat-card-label">Quantitative</div>
+          <div class="stat-card-value" id="quant-score">0%</div>
+          <div class="stat-card-delta up">Accuracy</div>
+        </div>
+        <div class="stat-card warning">
+          <div class="stat-card-label">Logical</div>
+          <div class="stat-card-value" id="logical-score">0%</div>
+          <div class="stat-card-delta up">Accuracy</div>
+        </div>
+        <div class="stat-card accent">
+          <div class="stat-card-label">Verbal</div>
+          <div class="stat-card-value" id="verbal-score">0%</div>
+          <div class="stat-card-delta up">Accuracy</div>
+        </div>
+      </div>
+
+      <!-- Category Tabs -->
+      <div class="tab-bar">
+        <button class="tab-item active" data-category="quantitative">Quantitative</button>
+        <button class="tab-item" data-category="logical">Logical Reasoning</button>
+        <button class="tab-item" data-category="verbal">Verbal Ability</button>
+      </div>
+
+      <!-- Quiz Container -->
+      <div class="card card-pad" id="quiz-container">
+        <div id="quiz-start">
+          <div style="text-align: center; padding: var(--space-8);">
+            <div style="font-size: 4rem; margin-bottom: var(--space-4);">🧮</div>
+            <h3 style="margin-bottom: var(--space-3);">Ready to practice?</h3>
+            <p style="color: var(--text-muted); margin-bottom: var(--space-6);">Test your aptitude skills with our curated questions.</p>
+            <button class="btn btn-primary btn-lg" onclick="startQuiz()">Start Quiz</button>
+          </div>
+        </div>
+        
+        <div id="quiz-question" style="display: none;">
+          <div class="flex justify-between items-center mb-4">
+            <span class="badge badge-primary" id="question-number">Question 1/10</span>
+            <span class="badge badge-muted" id="category-label">Quantitative</span>
+          </div>
+          <h3 id="question-text" style="margin-bottom: var(--space-6); font-size: var(--text-lg);"></h3>
+          <div id="options-container" class="flex-col gap-3"></div>
+          <div id="explanation" style="display: none; margin-top: var(--space-4); padding: var(--space-4); background: var(--bg-elevated); border-radius: var(--radius-md); border-left: 3px solid var(--primary);">
+            <strong style="color: var(--primary);">Explanation:</strong>
+            <p id="explanation-text" style="margin-top: var(--space-2); color: var(--text-secondary);"></p>
+          </div>
+          <div class="flex gap-3 mt-6">
+            <button class="btn btn-primary" id="next-btn" onclick="nextQuestion()" style="display: none;">Next Question</button>
+            <button class="btn btn-secondary" onclick="endQuiz()">End Quiz</button>
+          </div>
+        </div>
+        
+        <div id="quiz-result" style="display: none;">
+          <div style="text-align: center; padding: var(--space-8);">
+            <div style="font-size: 4rem; margin-bottom: var(--space-4);">🎉</div>
+            <h3 style="margin-bottom: var(--space-3);">Quiz Complete!</h3>
+            <div class="stat-card-value" id="final-score" style="font-size: var(--text-5xl); margin-bottom: var(--space-2);">0/10</div>
+            <p style="color: var(--text-muted); margin-bottom: var(--space-6);">Great effort! Keep practicing to improve.</p>
+            <button class="btn btn-primary btn-lg" onclick="resetQuiz()">Try Again</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script src="js/storage.js"></script>
+<script src="js/data.js"></script>
+<script src="js/theme.js"></script>
+<script src="js/main.js"></script>
+<script src="js/chatbot.js"></script>
+<script src="js/chatbot-ui.js"></script>
+<script src="js/aptitude.js"></script>
+</body>
+</html>

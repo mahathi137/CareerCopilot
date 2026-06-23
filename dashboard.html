@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard — CareerCopilot</title>
+<link rel="stylesheet" href="css/designsystem.css">
+<link rel="stylesheet" href="css/appshell.css">
+<link rel="stylesheet" href="css/app.css">
+<link rel="stylesheet" href="css/chatbot.css">
+</head>
+<body>
+<div class="app">
+
+  <div class="sidebar-overlay"></div>
+  <aside class="sidebar">
+    <a href="index.html" class="brand"><span class="brand-mark">CC</span> CareerCopilot</a>
+    <nav class="side-nav">
+      <a href="dashboard.html" class="side-link"><span class="ic">🏠</span> Dashboard</a>
+      <a href="coding.html" class="side-link"><span class="ic">💻</span> Coding Practice</a>
+      <a href="aptitude.html" class="side-link"><span class="ic">🧮</span> Aptitude Hub</a>
+      <a href="interview.html" class="side-link"><span class="ic">🎤</span> Interview Prep</a>
+      <a href="resume.html" class="side-link"><span class="ic">📄</span> Resume Master</a>
+      <a href="companies.html" class="side-link"><span class="ic">🏢</span> Company Prep</a>
+      <a href="planner.html" class="side-link"><span class="ic">🗓️</span> Study Planner</a>
+      <a href="achievements.html" class="side-link"><span class="ic">🏅</span> Achievements</a>
+      <a href="analytics.html" class="side-link"><span class="ic">📊</span> Analytics</a>
+      <a href="settings.html" class="side-link"><span class="ic">⚙️</span> Settings</a>
+    </nav>
+    <div class="side-foot">
+      <div class="side-user">
+        <div class="avatar" id="side-avatar">AS</div>
+        <div class="meta"><b id="side-name">Aman Sharma</b><span id="side-rank">Beginner Explorer</span></div>
+      </div>
+    </div>
+  </aside>
+
+  <main class="main">
+    <header class="topbar">
+      <div class="flex items-center gap-16">
+        <button class="menu-toggle btn-icon">☰</button>
+        <div>
+          <h1>Welcome back, <span id="topbar-name">Aman</span> 👋</h1>
+          <div class="topbar-sub">Here's how your placement prep is shaping up</div>
+        </div>
+      </div>
+      <div class="topbar-actions">
+        <button class="theme-toggle" aria-label="Toggle theme"></button>
+      </div>
+    </header>
+
+    <div class="content">
+
+      <!-- Tip banner -->
+      <div class="tip-banner reveal in mb-24">
+        <div class="ic">💡</div>
+        <div>
+          <b id="daily-tip">Practice one Medium DSA problem every day to build real interview confidence.</b>
+          <div class="text-muted" style="font-size:.8rem; margin-top:2px;" id="daily-quote"></div>
+        </div>
+      </div>
+
+      <!-- Stat grid -->
+      <div class="stat-grid">
+        <div class="card stat-card reveal">
+          <div class="stat-top">
+            <div class="stat-icon" style="background:rgba(99,102,241,.12); color:#6366F1;">🎯</div>
+            <span class="stat-delta delta-up" id="readiness-delta">Live</span>
+          </div>
+          <div class="stat-value" id="stat-readiness">0%</div>
+          <div class="stat-label">Placement Readiness Score</div>
+        </div>
+        <div class="card stat-card reveal">
+          <div class="stat-top">
+            <div class="stat-icon" style="background:rgba(16,185,129,.12); color:#10B981;">❤️</div>
+            <span class="stat-delta delta-up">Live</span>
+          </div>
+          <div class="stat-value" id="stat-health">0%</div>
+          <div class="stat-label">Career Health Score</div>
+        </div>
+        <div class="card stat-card reveal">
+          <div class="stat-top">
+            <div class="stat-icon" style="background:rgba(245,158,11,.12); color:#F59E0B;">🔥</div>
+            <span class="stat-delta delta-up" id="streak-delta">+1</span>
+          </div>
+          <div class="stat-value" id="stat-streak">0</div>
+          <div class="stat-label">Daily Streak (days)</div>
+        </div>
+        <div class="card stat-card reveal">
+          <div class="stat-top">
+            <div class="stat-icon" style="background:rgba(6,182,212,.12); color:#06B6D4;">⏳</div>
+            <span class="stat-delta delta-down" id="countdown-delta">Set date</span>
+          </div>
+          <div class="stat-value" id="stat-countdown">--</div>
+          <div class="stat-label">Days to Placement</div>
+        </div>
+      </div>
+
+      <!-- Main grid -->
+      <div class="dash-grid">
+        <div class="col-stack">
+
+          <div class="card card-pad reveal">
+            <div class="panel-head">
+              <h3>Module Progress</h3>
+              <a href="analytics.html" class="text-muted" style="font-size:.8rem;">View Analytics →</a>
+            </div>
+            <canvas id="chart-progress" height="190"></canvas>
+          </div>
+
+          <div class="card card-pad reveal">
+            <div class="panel-head">
+              <h3>Topic Performance (Coding)</h3>
+            </div>
+            <canvas id="chart-topics" height="200"></canvas>
+          </div>
+
+          <div class="card card-pad reveal">
+            <div class="panel-head"><h3>Recommended Actions</h3></div>
+            <div id="recommend-list"></div>
+          </div>
+
+        </div>
+
+        <div class="col-stack">
+
+          <div class="card card-pad reveal" style="text-align:center;">
+            <div class="panel-head" style="justify-content:center;"><h3>Overall Readiness</h3></div>
+            <div class="score-ring-wrap" style="width:160px;height:160px; margin:0 auto;">
+              <svg width="160" height="160">
+                <circle class="score-ring-bg" cx="80" cy="80" r="66" stroke-width="13"></circle>
+                <circle class="score-ring-fill" id="ring-readiness" cx="80" cy="80" r="66" stroke-width="13" stroke="#6366F1" stroke-dasharray="414" stroke-dashoffset="414"></circle>
+              </svg>
+              <div class="score-ring-label"><b id="ring-readiness-label">0%</b><span>READY</span></div>
+            </div>
+            <p class="text-muted mt-16" style="font-size:.82rem;">Career Rank: <b id="career-rank-label" style="color:var(--primary);">Beginner Explorer</b></p>
+          </div>
+
+          <div class="card card-pad reveal">
+            <div class="panel-head"><h3>Weekly Goals</h3></div>
+            <div class="row-item">
+              <div class="row-icon" style="background:rgba(99,102,241,.12); color:#6366F1;">💻</div>
+              <div class="row-main"><b>Solve 10 DSA Questions</b><span id="goal-coding">0/10 completed</span></div>
+            </div>
+            <div class="row-item">
+              <div class="row-icon" style="background:rgba(16,185,129,.12); color:#10B981;">🧮</div>
+              <div class="row-main"><b>Attempt 3 Aptitude Quizzes</b><span id="goal-aptitude">0/3 completed</span></div>
+            </div>
+            <div class="row-item">
+              <div class="row-icon" style="background:rgba(245,158,11,.12); color:#F59E0B;">🎤</div>
+              <div class="row-main"><b>Review 5 Interview Questions</b><span id="goal-interview">0/5 completed</span></div>
+            </div>
+          </div>
+
+          <div class="card quote-card reveal" id="quote-card">
+            <p id="quote-text">"Success is the sum of small efforts repeated day in and day out."</p>
+            <span id="quote-author">— Robert Collier</span>
+          </div>
+
+          <div class="card card-pad reveal">
+            <div class="panel-head"><h3>Quick Links</h3></div>
+            <div class="flex-col gap-12">
+              <a href="coding.html" class="btn btn-ghost btn-block">Continue Coding Practice</a>
+              <a href="planner.html" class="btn btn-ghost btn-block">Open Study Planner</a>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </main>
+</div>
+
+<script src="js/storage.js"></script>
+<script src="js/data.js"></script>
+<script src="js/theme.js"></script>
+<script src="js/main.js"></script>
+<script src="js/onboarding.js"></script>
+<script src="js/chatbot.js"></script>
+<script src="js/chatbot-ui.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script src="js/dashboard.js"></script>
+</body>
+</html>

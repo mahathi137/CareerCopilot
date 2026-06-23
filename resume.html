@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Resume Master — CareerCopilot</title>
+<link rel="stylesheet" href="css/designsystem.css">
+<link rel="stylesheet" href="css/appshell.css">
+<link rel="stylesheet" href="css/app.css">
+<link rel="stylesheet" href="css/chatbot.css">
+</head>
+<body>
+<div class="app">
+
+  <div class="sidebar-overlay"></div>
+  <aside class="sidebar">
+    <a href="index.html" class="brand"><span class="brand-mark">CC</span> CareerCopilot</a>
+    <nav class="side-nav">
+      <a href="dashboard.html" class="side-link"><span class="ic">🏠</span> Dashboard</a>
+      <a href="coding.html" class="side-link"><span class="ic">💻</span> Coding Practice</a>
+      <a href="aptitude.html" class="side-link"><span class="ic">🧮</span> Aptitude Hub</a>
+      <a href="interview.html" class="side-link"><span class="ic">🎤</span> Interview Prep</a>
+      <a href="resume.html" class="side-link active"><span class="ic">📄</span> Resume Master</a>
+      <a href="companies.html" class="side-link"><span class="ic">🏢</span> Company Prep</a>
+      <a href="planner.html" class="side-link"><span class="ic">🗓️</span> Study Planner</a>
+      <a href="achievements.html" class="side-link"><span class="ic">🏅</span> Achievements</a>
+      <a href="analytics.html" class="side-link"><span class="ic">📊</span> Analytics</a>
+      <a href="settings.html" class="side-link"><span class="ic">⚙️</span> Settings</a>
+    </nav>
+    <div class="side-foot">
+      <div class="side-user">
+        <div class="avatar" id="side-avatar">AS</div>
+        <div class="meta"><b id="side-name">Aman Sharma</b><span id="side-rank">Beginner Explorer</span></div>
+      </div>
+    </div>
+  </aside>
+
+  <main class="main">
+    <header class="topbar">
+      <div class="flex items-center gap-16">
+        <button class="menu-toggle btn-icon">☰</button>
+        <div>
+          <h1>Resume Master</h1>
+          <div class="topbar-sub">Build a perfect resume with our interactive checklist</div>
+        </div>
+      </div>
+      <div class="topbar-actions">
+        <button class="theme-toggle" aria-label="Toggle theme"></button>
+      </div>
+    </header>
+
+    <div class="content">
+      <!-- Upload Section -->
+      <div class="card card-pad mb-6">
+        <h3 style="margin-bottom: var(--space-4);">Upload Your Resume</h3>
+        <div id="upload-area" style="border: 2px dashed var(--border); border-radius: var(--radius-lg); padding: var(--space-8); text-align: center; cursor: pointer; transition: all var(--transition-base);">
+          <div style="font-size: 3rem; margin-bottom: var(--space-4);">📄</div>
+          <p style="color: var(--text-secondary); margin-bottom: var(--space-4);">Drag and drop your resume here, or click to browse</p>
+          <p style="color: var(--text-muted); font-size: var(--text-sm);">Supported formats: PDF, DOCX (Max 5MB)</p>
+          <input type="file" id="resume-upload" accept=".pdf,.docx" style="display: none;">
+        </div>
+        <div id="upload-status" style="margin-top: var(--space-4); display: none;">
+          <div class="flex items-center gap-3">
+            <div style="font-size: 2rem;">✓</div>
+            <div>
+              <div style="font-weight: 600; color: var(--text-primary);" id="uploaded-filename">resume.pdf</div>
+              <div style="font-size: var(--text-sm); color: var(--text-muted);" id="upload-date">Uploaded just now</div>
+            </div>
+            <button class="btn btn-sm btn-danger" onclick="removeResume()" style="margin-left: auto;">Remove</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Analysis Results -->
+      <div id="analysis-results" style="display: none;">
+        <div class="content-grid-2 mb-6">
+          <div class="card card-pad">
+            <h3 style="margin-bottom: var(--space-4);">Resume Score</h3>
+            <div class="score-ring-wrap" style="width: 150px; height: 150px; margin: 0 auto;">
+              <svg width="150" height="150">
+                <circle class="score-ring-bg" cx="75" cy="75" r="60" stroke-width="12"></circle>
+                <circle class="score-ring-fill" id="analysis-resume-ring" cx="75" cy="75" r="60" stroke-width="12" stroke="#10B981" stroke-dasharray="377" stroke-dashoffset="377"></circle>
+              </svg>
+              <div class="score-ring-label">
+                <b id="analysis-resume-score" style="font-size: var(--text-3xl);">0%</b>
+                <span>SCORE</span>
+              </div>
+            </div>
+          </div>
+          
+          <div class="card card-pad">
+            <h3 style="margin-bottom: var(--space-4);">ATS Score</h3>
+            <div class="score-ring-wrap" style="width: 150px; height: 150px; margin: 0 auto;">
+              <svg width="150" height="150">
+                <circle class="score-ring-bg" cx="75" cy="75" r="60" stroke-width="12"></circle>
+                <circle class="score-ring-fill" id="ats-ring" cx="75" cy="75" r="60" stroke-width="12" stroke="#6366F1" stroke-dasharray="377" stroke-dashoffset="377"></circle>
+              </svg>
+              <div class="score-ring-label">
+                <b id="ats-score" style="font-size: var(--text-3xl);">0%</b>
+                <span>ATS SCORE</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card card-pad mb-6">
+          <h3 style="margin-bottom: var(--space-4);">Extracted Information</h3>
+          <div class="content-grid-2">
+            <div>
+              <h4 style="margin-bottom: var(--space-2); font-size: var(--text-sm); color: var(--text-muted);">Skills Detected</h4>
+              <div id="extracted-skills" class="flex flex-wrap gap-2">
+                <!-- Skills will be rendered here -->
+              </div>
+            </div>
+            <div>
+              <h4 style="margin-bottom: var(--space-2); font-size: var(--text-sm); color: var(--text-muted);">Education</h4>
+              <div id="extracted-education" style="color: var(--text-secondary);">
+                <!-- Education will be rendered here -->
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card card-pad mb-6">
+          <h3 style="margin-bottom: var(--space-4);">Missing Sections</h3>
+          <div id="missing-sections" class="flex-col gap-2">
+            <!-- Missing sections will be rendered here -->
+          </div>
+        </div>
+
+        <div class="card card-pad mb-6">
+          <h3 style="margin-bottom: var(--space-4);">Improvement Suggestions</h3>
+          <div id="improvement-suggestions" class="flex-col gap-3">
+            <!-- Suggestions will be rendered here -->
+          </div>
+        </div>
+      </div>
+
+      <!-- Score Card -->
+      <div class="card card-pad mb-6" style="text-align: center;">
+        <div class="score-ring-wrap" style="width: 200px; height: 200px; margin: 0 auto;">
+          <svg width="200" height="200">
+            <circle class="score-ring-bg" cx="100" cy="100" r="85" stroke-width="15"></circle>
+            <circle class="score-ring-fill" id="resume-ring" cx="100" cy="100" r="85" stroke-width="15" stroke="#10B981" stroke-dasharray="534" stroke-dashoffset="534"></circle>
+          </svg>
+          <div class="score-ring-label">
+            <b id="resume-score" style="font-size: var(--text-4xl);">0%</b>
+            <span>RESUME SCORE</span>
+          </div>
+        </div>
+        <p class="text-muted mt-4">Complete the checklist below to improve your resume score</p>
+      </div>
+
+      <!-- Checklist Sections -->
+      <div class="content-grid-3" id="resume-checklist">
+        <!-- Checklist items will be rendered here -->
+      </div>
+    </div>
+  </main>
+</div>
+
+<script src="js/storage.js"></script>
+<script src="js/data.js"></script>
+<script src="js/theme.js"></script>
+<script src="js/main.js"></script>
+<script src="js/chatbot.js"></script>
+<script src="js/chatbot-ui.js"></script>
+<script src="js/resume.js"></script>
+</body>
+</html>

@@ -1,0 +1,8 @@
+/* ============================================
+   CareerCopilot - Main Style Sheet
+   Imports all CSS modules
+   ============================================ */
+
+@import url('designsystem.css');
+@import url('appshell.css');
+@import url('landing.css');
