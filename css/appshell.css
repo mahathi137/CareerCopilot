@@ -579,6 +579,12 @@
   background: rgba(0,0,0,0.6);
   z-index: calc(var(--z-sticky) - 5);
   backdrop-filter: blur(4px);
+  pointer-events: none;
+}
+
+.sidebar-overlay.active {
+  display: block;
+  pointer-events: auto;
 }
 
 /* ---- Responsive ---- */

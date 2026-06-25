@@ -13,7 +13,34 @@
     search: ''
   };
   let monacoEditor = null;
-  let currentLanguage = 'python';
+  let fallbackEditor = null;
+  let currentLanguage = 'javascript';
+
+  function getEditorCode() {
+    if (monacoEditor) return monacoEditor.getValue();
+    if (fallbackEditor) return fallbackEditor.value;
+    return '';
+  }
+
+  function setEditorCode(code) {
+    if (monacoEditor) {
+      monacoEditor.setValue(code);
+    } else if (fallbackEditor) {
+      fallbackEditor.value = code;
+    }
+  }
+  // Build a problem-aware starter stub (JS gets the exact function name the
+  // judge expects so users can rely on automated grading).
+  function getStarterCode(problem, language) {
+    const cfg = LANGUAGE_CONFIG[language];
+    const base = cfg ? cfg.defaultCode : '';
+    if (!problem) return base;
+    const j = (typeof PROBLEM_JUDGES !== 'undefined') ? PROBLEM_JUDGES[problem.id] : null;
+    if (language === 'javascript' && j) {
+      return `// ${problem.title}\n// Implement ${j.funcName}(...) and return the result.\n// It is run against real test cases when you click Run / Submit.\nfunction ${j.funcName}() {\n    // Your code here\n}`;
+    }
+    return base;
+  }
 
   // Language configurations for Monaco Editor
   const LANGUAGE_CONFIG = {
@@ -103,6 +130,11 @@ int main() {
       ]
     }
     // Add more test cases for other problems as needed
+  };
+
+  const PROBLEM_JUDGES = {
+    arr1: { funcName: 'twoSum' },
+    arr2: { funcName: 'maxProfit' }
   };
 
   // 150+ Realistic Interview Questions
@@ -243,18 +275,35 @@ int main() {
   }
 
   function initMonacoEditor() {
+    const container = document.getElementById('monaco-editor-container');
+    if (!container) return;
+
+    function createFallbackEditor() {
+      if (fallbackEditor) return;
+      fallbackEditor = document.createElement('textarea');
+      fallbackEditor.className = 'form-input code-fallback-editor';
+      fallbackEditor.spellcheck = false;
+      fallbackEditor.value = getStarterCode(currentProblem, currentLanguage);
+      fallbackEditor.setAttribute('aria-label', 'Code editor');
+      container.innerHTML = '';
+      container.appendChild(fallbackEditor);
+    }
+
+    if (typeof require === 'undefined') {
+      createFallbackEditor();
+      initLanguageSelector();
+      return;
+    }
+
     require.config({ paths: { 'vs': 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.45.0/min/vs' }});
 
     require(['vs/editor/editor.main'], function() {
-      const container = document.getElementById('monaco-editor-container');
-      if (!container) return;
-
       // Configure Monaco theme based on current theme
       const isDark = document.documentElement.getAttribute('data-theme') !== 'light';
       monaco.editor.setTheme(isDark ? 'vs-dark' : 'vs-light');
 
       monacoEditor = monaco.editor.create(container, {
-        value: LANGUAGE_CONFIG[currentLanguage].defaultCode,
+        value: getStarterCode(currentProblem, currentLanguage),
         language: LANGUAGE_CONFIG[currentLanguage].monaco,
         theme: isDark ? 'vs-dark' : 'vs-light',
         fontSize: 14,
@@ -282,13 +331,23 @@ int main() {
         }
       });
 
-      // Handle language change
-      document.getElementById('language-select').addEventListener('change', (e) => {
-        currentLanguage = e.target.value;
+      initLanguageSelector();
+    }, createFallbackEditor);
+  }
+
+  function initLanguageSelector() {
+    const select = document.getElementById('language-select');
+    if (!select || select.dataset.bound === 'true') return;
+    select.dataset.bound = 'true';
+    select.value = currentLanguage;
+    select.addEventListener('change', (e) => {
+      currentLanguage = e.target.value;
+      const code = getStarterCode(currentProblem, currentLanguage);
+      if (monacoEditor && typeof monaco !== 'undefined') {
         const config = LANGUAGE_CONFIG[currentLanguage];
         monaco.editor.setModelLanguage(monacoEditor.getModel(), config.monaco);
-        monacoEditor.setValue(config.defaultCode);
-      });
+      }
+      setEditorCode(code);
     });
   }
 
@@ -395,6 +454,7 @@ int main() {
             if (c !== e.target) c.checked = false;
           });
           currentFilters.difficulty = ['all'];
+          renderProblems();
         } else {
           document.querySelector('.difficulty-filter[value="all"]').checked = false;
           if (e.target.checked) {
@@ -402,11 +462,12 @@ int main() {
             currentFilters.difficulty.push(e.target.value);
           } else {
             currentFilters.difficulty = currentFilters.difficulty.filter(d => d !== e.target.value);
-            if (currentFilters.difficulty.length === 0) {
+          if (currentFilters.difficulty.length === 0) {
               currentFilters.difficulty = ['all'];
               document.querySelector('.difficulty-filter[value="all"]').checked = true;
             }
           }
+          renderProblems();
         }
       });
     });
@@ -414,11 +475,13 @@ int main() {
     // Topic filter
     document.getElementById('topic-filter').addEventListener('change', (e) => {
       currentFilters.topic = e.target.value;
+      renderProblems();
     });
 
     // Status filter
     document.getElementById('status-filter').addEventListener('change', (e) => {
       currentFilters.status = e.target.value;
+      renderProblems();
     });
   }
 
@@ -429,9 +492,9 @@ int main() {
     searchInput.addEventListener('input', (e) => {
       clearTimeout(debounceTimer);
       debounceTimer = setTimeout(() => {
-        currentFilters.search = e.target.value;
+        currentFilters.search = e.target.value.trim();
         renderProblems();
-      }, 300);
+      }, 120);
     });
   }
 
@@ -489,11 +552,10 @@ int main() {
     document.getElementById('detail-companies').innerHTML = currentProblem.companies.map(c => `<span class="tag">${c}</span>`).join(' ');
     document.getElementById('detail-bookmark-btn').textContent = isBookmarked ? '★' : '☆';
     document.getElementById('detail-bookmark-btn').style.color = isBookmarked ? 'var(--warning)' : 'var(--text-secondary)';
+    renderTestCasesPanel(currentProblem);
 
     // Reset editor and output
-    if (monacoEditor) {
-      monacoEditor.setValue(LANGUAGE_CONFIG[currentLanguage].defaultCode);
-    }
+    setEditorCode(getStarterCode(currentProblem, currentLanguage));
     document.getElementById('output-console').textContent = 'Output will appear here...';
     document.getElementById('output-console').style.color = 'var(--text-secondary)';
     document.getElementById('test-results').textContent = '';
@@ -502,6 +564,21 @@ int main() {
     document.getElementById('problem-list-view').style.display = 'none';
     document.getElementById('problem-detail-view').style.display = 'block';
   };
+
+  function renderTestCasesPanel(problem) {
+    const panel = document.getElementById('test-cases-list');
+    if (!panel || !problem) return;
+    const cases = (PROBLEM_TEST_CASES[problem.id] && PROBLEM_TEST_CASES[problem.id].sample) || [
+      { input: problem.sampleInput || 'Sample input', expected: problem.sampleOutput || 'Sample output' }
+    ];
+    panel.innerHTML = cases.map((testCase, index) => `
+      <div class="card" style="padding: var(--space-3); background: var(--bg-elevated);">
+        <strong style="font-size: var(--text-sm); color: var(--text-primary);">Case ${index + 1}</strong>
+        <div style="font-family: var(--font-mono); font-size: var(--text-xs); color: var(--text-secondary); margin-top: var(--space-2); white-space: pre-wrap;">Input: ${testCase.input}
+Expected: ${testCase.expected}</div>
+      </div>
+    `).join('');
+  }
 
   window.showProblemList = function() {
     document.getElementById('problem-detail-view').style.display = 'none';
@@ -529,26 +606,24 @@ int main() {
   };
 
   window.resetCode = function() {
-    if (monacoEditor) {
-      monacoEditor.setValue(LANGUAGE_CONFIG[currentLanguage].defaultCode);
-    }
+    setEditorCode(getStarterCode(currentProblem, currentLanguage));
     document.getElementById('output-console').textContent = 'Output will appear here...';
     document.getElementById('output-console').style.color = 'var(--text-secondary)';
     document.getElementById('test-results').textContent = '';
   };
 
   window.runCode = function() {
-    if (!monacoEditor) {
+    if (!monacoEditor && !fallbackEditor) {
       CCToast('Editor not loaded yet. Please wait...', 'warning');
       return;
     }
 
-    const code = monacoEditor.getValue();
+    const code = getEditorCode();
     const output = document.getElementById('output-console');
     const testResults = document.getElementById('test-results');
     
     if (!code.trim()) {
-      output.textContent = 'Error: No code to execute.';
+      output.textContent = 'Error: No code provided';
       output.style.color = 'var(--danger)';
       return;
     }
@@ -599,123 +674,178 @@ int main() {
   };
 
   function validateSyntax(code, language) {
-    const config = LANGUAGE_CONFIG[language];
+    const trimmed = code.trim();
+    if (!trimmed) return { valid: false, error: 'Error: No code provided' };
     
-    // Basic syntax validation
     if (language === 'python') {
-      // Check for basic Python syntax errors
-      if (code.includes('def ') && !code.includes(':')) {
-        return { valid: false, error: 'SyntaxError: expected ":" after function definition' };
+      const lines = code.replace(/\t/g, '    ').split('\n');
+      const stack = [];
+      for (let i = 0; i < lines.length; i++) {
+        const raw = lines[i];
+        const line = raw.trim();
+        if (!line || line.startsWith('#')) continue;
+        const indent = raw.match(/^ */)[0].length;
+        if (indent % 4 !== 0) return { valid: false, error: `IndentationError: unexpected indent on line ${i + 1}` };
+        if (/^(def|if|elif|else|for|while|try|except|finally|class)\b/.test(line) && !line.endsWith(':')) {
+          return { valid: false, error: `SyntaxError: expected ":" on line ${i + 1}` };
+        }
+        if (stack.length && indent > stack[stack.length - 1] + 4) {
+          return { valid: false, error: `IndentationError: unexpected indent on line ${i + 1}` };
+        }
+        stack.push(indent);
       }
-      if (code.includes('if ') && !code.includes(':')) {
-        return { valid: false, error: 'SyntaxError: expected ":" after if statement' };
-      }
-      if (code.includes('for ') && !code.includes(':')) {
-        return { valid: false, error: 'SyntaxError: expected ":" after for loop' };
-      }
-      if (code.includes('while ') && !code.includes(':')) {
-        return { valid: false, error: 'SyntaxError: expected ":" after while loop' };
-      }
-      // Check for unmatched parentheses
-      const openParens = (code.match(/\(/g) || []).length;
-      const closeParens = (code.match(/\)/g) || []).length;
-      if (openParens !== closeParens) {
-        return { valid: false, error: 'SyntaxError: unmatched parentheses' };
-      }
+      if (!balancedDelimiters(code)) return { valid: false, error: 'SyntaxError: unmatched brackets or parentheses' };
+      if (/^\s*(hello|random|asdf|lorem|test)\s*$/i.test(trimmed)) return { valid: false, error: 'Compilation Error: code is not a valid Python solution' };
     }
     
     if (language === 'java') {
-      // Check for Java syntax errors
-      if (!code.includes('class ')) {
-        return { valid: false, error: 'Error: Class Main not found' };
-      }
-      if (!code.includes('public static void main')) {
-        return { valid: false, error: 'Error: main method not found' };
-      }
-      if (!code.includes('{') || !code.includes('}')) {
-        return { valid: false, error: 'SyntaxError: missing braces' };
-      }
+      if (!/\bclass\s+\w+/.test(code)) return { valid: false, error: 'Compilation Error: class keyword required' };
+      if (!/public\s+static\s+void\s+main\s*\(\s*String(?:\[\]|\s+\[\])\s+\w+\s*\)/.test(code)) return { valid: false, error: 'Compilation Error: main method required' };
+      if (!balancedDelimiters(code)) return { valid: false, error: 'Compilation Error: unmatched braces or parentheses' };
     }
     
     if (language === 'cpp' || language === 'c') {
-      // Check for C/C++ syntax errors
-      if (!code.includes('main')) {
-        return { valid: false, error: 'Error: main function not found' };
-      }
-      if (code.includes('if ') && !code.includes('{')) {
-        return { valid: false, error: 'SyntaxError: expected ";" or "{" after if statement' };
-      }
-      // Check for missing semicolons
-      const lines = code.split('\n');
-      for (let i = 0; i < lines.length; i++) {
-        const line = lines[i].trim();
-        if (line.length > 0 && 
-            !line.startsWith('//') && 
-            !line.startsWith('#') && 
-            !line.startsWith('{') && 
-            !line.startsWith('}') &&
-            !line.includes(';') &&
-            !line.includes('if') &&
-            !line.includes('for') &&
-            !line.includes('while') &&
-            !line.includes('else') &&
-            !line.includes('int main') &&
-            !line.includes('return')) {
-          // This is a heuristic - might have false positives
-          // but better to be strict for learning
-        }
-      }
+      if (!/\b(?:int|void)\s+main\s*\(/.test(code)) return { valid: false, error: 'Compilation Error: main() required' };
+      if (!balancedDelimiters(code)) return { valid: false, error: 'Compilation Error: unmatched braces or parentheses' };
     }
     
     if (language === 'javascript') {
-      // Check for JavaScript syntax errors
-      if (code.includes('function ') && !code.includes('{')) {
-        return { valid: false, error: 'SyntaxError: expected "{" after function declaration' };
+      if (!balancedDelimiters(code)) return { valid: false, error: 'SyntaxError: unmatched braces or parentheses' };
+      try {
+        new Function(code);
+      } catch (error) {
+        return { valid: false, error: `SyntaxError: ${error.message}` };
       }
-      if (code.includes('if ') && !code.includes('{')) {
-        return { valid: false, error: 'SyntaxError: expected "{" after if statement' };
-      }
-      // Check for unmatched brackets
-      const openBraces = (code.match(/\{/g) || []).length;
-      const closeBraces = (code.match(/\}/g) || []).length;
-      if (openBraces !== closeBraces) {
-        return { valid: false, error: 'SyntaxError: unmatched braces' };
-      }
+      if (/^\s*(hello|random|asdf|lorem|test)\s*;?\s*$/i.test(trimmed)) return { valid: false, error: 'Compilation Error: code is not a valid JavaScript solution' };
     }
     
     return { valid: true };
   }
 
+  function balancedDelimiters(code) {
+    const pairs = { '(': ')', '{': '}', '[': ']' };
+    const closes = new Set(Object.values(pairs));
+    const stack = [];
+    let quote = null;
+    for (let i = 0; i < code.length; i++) {
+      const ch = code[i];
+      const prev = code[i - 1];
+      if (quote) {
+        if (ch === quote && prev !== '\\') quote = null;
+        continue;
+      }
+      if (ch === '"' || ch === "'" || ch === '`') {
+        quote = ch;
+        continue;
+      }
+      if (pairs[ch]) stack.push(pairs[ch]);
+      else if (closes.has(ch) && stack.pop() !== ch) return false;
+    }
+    return stack.length === 0 && !quote;
+  }
+
   function runTestCases(code, testCases, language) {
-    // Simulate test case execution
-    // In a real implementation, this would use a sandboxed execution environment
+    const unsupported = language !== 'javascript';
+    const judge = currentProblem && typeof PROBLEM_JUDGES !== 'undefined' ? PROBLEM_JUDGES[currentProblem.id] : null;
     return testCases.map((testCase, index) => {
-      // For demo purposes, randomly pass/fail based on code length
-      // In production, this would actually execute the code
-      const hasCode = code.trim().length > 50;
-      const passed = hasCode || Math.random() > 0.3;
-      
-      return {
-        input: testCase.input,
-        expected: testCase.expected,
-        got: passed ? testCase.expected : 'Wrong output',
-        passed: passed
-      };
+      if (unsupported) {
+        return {
+          input: testCase.input,
+          expected: testCase.expected,
+          got: 'Execution simulation available for JavaScript only in this browser build',
+          passed: false,
+          status: 'Partially Accepted'
+        };
+      }
+      if (!judge) {
+        return {
+          input: testCase.input,
+          expected: testCase.expected,
+          got: 'No judge configured for this problem yet',
+          passed: false,
+          status: 'Partially Accepted'
+        };
+      }
+      try {
+        const solutionFactory = new Function(`${code}; return typeof ${judge.funcName} === 'function' ? ${judge.funcName} : null;`);
+        const solution = solutionFactory();
+        if (!solution) {
+          return { input: testCase.input, expected: testCase.expected, got: `${judge.funcName}() not found`, passed: false, status: 'Compilation Error' };
+        }
+        const args = Array.isArray(testCase.args) ? testCase.args : parseCaseArgs(testCase.input);
+        const expectedValue = testCase.expectedValue !== undefined ? testCase.expectedValue : parseExpectedValue(testCase.expected);
+        const actual = solution(...cloneArgs(args));
+        const passed = valuesEqual(actual, expectedValue);
+        return {
+          input: testCase.input,
+          expected: testCase.expected,
+          got: formatValue(actual),
+          passed,
+          status: passed ? 'Accepted' : 'Wrong Answer'
+        };
+      } catch (error) {
+        return { input: testCase.input, expected: testCase.expected, got: error.message, passed: false, status: 'Runtime Error' };
+      }
     });
   }
 
+  function parseCaseArgs(input) {
+    if (!input) return [];
+    const normalized = `[${input}]`;
+    try { return JSON.parse(normalized); } catch {}
+    return input.split(',').map(part => {
+      const trimmed = part.trim();
+      try { return JSON.parse(trimmed); } catch { return trimmed; }
+    });
+  }
+
+  function parseExpectedValue(expected) {
+    if (typeof expected !== 'string') return expected;
+    try { return JSON.parse(expected); } catch {}
+    if (/^-?\d+(\.\d+)?$/.test(expected)) return Number(expected);
+    if (expected === 'true') return true;
+    if (expected === 'false') return false;
+    return expected;
+  }
+
+  function cloneArgs(args) {
+    return args.map(arg => {
+      try { return JSON.parse(JSON.stringify(arg)); } catch { return arg; }
+    });
+  }
+
+  function valuesEqual(actual, expected) {
+    return JSON.stringify(actual) === JSON.stringify(expected);
+  }
+
+  function formatValue(value) {
+    if (typeof value === 'string') return value;
+    if (value === undefined) return 'undefined';
+    return JSON.stringify(value);
+  }
+
+  function getSubmissionStatus(passed, total, results) {
+    if (/(while\s*\(\s*true\s*\)|for\s*\(\s*;\s*;\s*\))/.test(getEditorCode())) return 'Time Limit Exceeded';
+    if (passed === total) return 'Accepted';
+    if (results.some(result => result.status === 'Runtime Error')) return 'Runtime Error';
+    if (results.some(result => result.status === 'Compilation Error')) return 'Compilation Error';
+    if (passed > 0) return 'Partially Accepted';
+    if (total > 8 && getEditorCode().length > 4000) return 'Time Limit Exceeded';
+    return 'Wrong Answer';
+  }
+
   window.submitCode = function() {
-    if (!monacoEditor) {
+    if (!monacoEditor && !fallbackEditor) {
       CCToast('Editor not loaded yet. Please wait...', 'warning');
       return;
     }
 
-    const code = monacoEditor.getValue();
+    const code = getEditorCode();
     const output = document.getElementById('output-console');
     const testResults = document.getElementById('test-results');
     
     if (!code.trim()) {
-      output.textContent = 'Error: No code to submit.';
+      output.textContent = 'Error: No code provided';
       output.style.color = 'var(--danger)';
       return;
     }
@@ -765,8 +895,10 @@ int main() {
           passed++;
         }
       });
+      const status = getSubmissionStatus(passed, total, results);
       
-      if (passed === total) {
+      if (status === 'Accepted') {
+        outputText += `Accepted\nPassed ${passed}/${total} Test Cases\n\n`;
         outputText += `✓ All test cases passed!\n✓ Solution accepted!\n\n+15 XP earned!`;
         output.textContent = outputText;
         output.style.color = 'var(--success)';
@@ -781,6 +913,7 @@ int main() {
           CCToast('Problem solved! +15 XP', 'success');
         }
       } else {
+        outputText += `${status}\nPassed ${passed}/${total} Test Cases\n\n`;
         outputText += `✗ ${total - passed} test case(s) failed\n\n`;
         outputText += `Passed: ${passed}/${total}\n`;
         outputText += `Failed: ${total - passed}/${total}\n\n`;

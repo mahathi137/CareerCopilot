@@ -10,6 +10,37 @@
     renderCompanies();
   }
 
+  const COMPANY_DEFAULTS = {
+    TCS: ['Week 1: Quant, reasoning, verbal fundamentals.', 'Week 2: Programming MCQs, arrays, strings, and basic SQL.', 'Week 3: Mock NQT tests and project interview practice.'],
+    Infosys: ['Revise Infosys quantitative patterns.', 'Practice pseudocode, OOP, DBMS, and two easy-medium coding problems daily.', 'Prepare project architecture and role-specific questions.'],
+    Wipro: ['Practice NLTH aptitude and written English.', 'Solve string, array, and number-based coding questions.', 'Prepare concise HR answers around flexibility and learning mindset.'],
+    Accenture: ['Practice cognitive and technical assessment sections.', 'Revise cloud basics, Agile, OOP, and one programming language.', 'Prepare leadership and teamwork stories.'],
+    Cognizant: ['Practice GAME/aptitude style questions.', 'Solve easy-medium DSA and SQL query problems.', 'Prepare Java/OOP and project deep dives.'],
+    Capgemini: ['Practice pseudocode and game-based assessments.', 'Revise cloud, Agile, DevOps basics, OOP, and DBMS.', 'Write timed essays on current technology topics.']
+  };
+
+  function enrichCompany(key, company) {
+    const aptitude = company.aptitudeRound || (company.aptitudePattern?.sections || []).map(section =>
+      `${section.name}: ${section.questions || 'adaptive'} questions, ${section.time}`
+    );
+    const coding = Array.isArray(company.codingRound) ? company.codingRound : [company.codingRound || 'Coding details vary by role and campus drive.'];
+    return {
+      ...company,
+      eligibility: company.eligibility || ['Usually open to eligible final-year students.', 'Minimum percentage or CGPA criteria varies by campus.', 'No active backlogs are commonly expected at joining.'],
+      aptitudeRound: aptitude.length ? aptitude : ['Quantitative aptitude, logical reasoning, and verbal ability.'],
+      codingRound: coding,
+      technicalInterview: company.technicalInterview || (company.interviewTopics || []).map(topic => `Prepare ${topic} with definitions, examples, and project usage.`),
+      hrInterview: company.hrInterview || ['Tell me about yourself.', `Why ${company.name}?`, 'Are you flexible with location, shifts, and training?', 'Describe a challenge from your project or academics.'],
+      preparationRoadmap: company.preparationRoadmap || COMPANY_DEFAULTS[key] || company.tips || [],
+      previousQuestions: company.commonQuestions || [],
+      faq: company.faq || [
+        { question: 'What should I prioritize first?', answer: `Start with ${company.name}'s aptitude pattern, then revise one programming language, SQL, OOP, and your projects.` },
+        { question: 'How should I prepare for coding?', answer: 'Practice arrays, strings, sorting, searching, recursion, and basic dynamic programming under a timer.' },
+        { question: 'What matters in HR?', answer: 'Clarity, confidence, willingness to learn, location flexibility, and honest project ownership.' }
+      ]
+    };
+  }
+
   function renderCompanies() {
     const grid = document.getElementById('companies-grid');
     if (!grid) return;
@@ -59,11 +90,35 @@
   };
 
   window.showDetails = function(key) {
-    const company = COMPANIES_DATA[key];
+    const company = enrichCompany(key, COMPANIES_DATA[key]);
     if (!company) return;
+    const studied = Storage.get('companies_studied', []);
+    if (!studied.includes(key)) {
+      studied.push(key);
+      Storage.set('companies_studied', studied);
+    }
 
     const dreamCompanies = CompanyTracker.getDreamCompanies();
     const isDream = dreamCompanies.includes(key);
+    company.eligibility = company.eligibility || [
+      'Usually open to final-year students from eligible branches.',
+      'Minimum academic percentage or CGPA criteria varies by campus.',
+      'No active backlogs are commonly expected at joining.'
+    ];
+    company.aptitudeRound = company.aptitudeRound || (company.aptitudePattern?.sections || []).map(section =>
+      `${section.name}: ${section.questions || 'adaptive'} questions, ${section.time}`
+    );
+    company.codingRound = Array.isArray(company.codingRound) ? company.codingRound : [company.codingRound || 'Coding details vary by role and campus drive.'];
+    company.interviewRound = company.interviewRound || [
+      ...(company.interviewTopics || []).map(topic => `Technical: prepare ${topic} with examples from your projects.`),
+      'HR: tell me about yourself, relocation flexibility, strengths, weaknesses, and why this company.'
+    ];
+    company.preparationStrategy = company.preparationStrategy || company.tips || [];
+    company.faq = company.faq || [
+      { question: 'What should I prioritize first?', answer: 'Start with the aptitude pattern, then revise one programming language, SQL, OOP, and your projects.' },
+      { question: 'Are previous questions useful?', answer: 'Yes. Use them to identify repeated topics, then practice the underlying concepts.' },
+      { question: 'How many coding problems should I solve?', answer: 'Solve 25-40 focused easy/medium problems across arrays, strings, sorting, searching, and recursion.' }
+    ];
 
     document.getElementById('companies-grid').style.display = 'none';
     document.getElementById('company-detail-view').style.display = 'block';
@@ -135,17 +190,29 @@
 
       <div class="content-grid-2 mb-6">
         <div class="card card-pad" style="background: var(--bg-elevated);">
-          <h3 style="margin-bottom: var(--space-3); color: var(--text-primary);">Interview Round</h3>
+          <h3 style="margin-bottom: var(--space-3); color: var(--text-primary);">Technical Interview</h3>
           <ul style="color: var(--text-secondary); line-height: 1.8;">
-            ${company.interviewRound.map(item => `<li>• ${item}</li>`).join('')}
+            ${company.technicalInterview.map(item => `<li>• ${item}</li>`).join('')}
           </ul>
         </div>
 
         <div class="card card-pad" style="background: var(--bg-elevated);">
-          <h3 style="margin-bottom: var(--space-3); color: var(--text-primary);">Preparation Strategy</h3>
+          <h3 style="margin-bottom: var(--space-3); color: var(--text-primary);">HR Interview</h3>
           <ul style="color: var(--text-secondary); line-height: 1.8;">
-            ${company.preparationStrategy.map(item => `<li>• ${item}</li>`).join('')}
+            ${company.hrInterview.map(item => `<li>• ${item}</li>`).join('')}
           </ul>
+        </div>
+      </div>
+
+      <div class="card card-pad mb-6" style="background: var(--bg-elevated);">
+        <h3 style="margin-bottom: var(--space-3); color: var(--text-primary);">Preparation Roadmap</h3>
+        <div class="flex-col gap-3">
+          ${company.preparationRoadmap.map((item, index) => `
+            <div class="flex items-start gap-3">
+              <div class="badge badge-primary">${index + 1}</div>
+              <div style="color: var(--text-secondary);">${item}</div>
+            </div>
+          `).join('')}
         </div>
       </div>
 
@@ -168,6 +235,22 @@
         </ul>
       </div>
     `;
+    const detail = document.getElementById('company-detail-content');
+    const previousQuestions = company.previousQuestions || [];
+    detail.insertAdjacentHTML('beforeend', `
+      <div class="content-grid-2 mt-4">
+        <div class="card card-pad" style="background: var(--bg-elevated);">
+          <h3 style="margin-bottom: var(--space-3); color: var(--text-primary);">Company Overview</h3>
+          <p style="color: var(--text-secondary); line-height: 1.8;">${company.name} is a ${company.type.toLowerCase()} company with typical fresher packages around ${company.package}. Expect ${company.difficulty.toLowerCase()} selection difficulty with emphasis on aptitude, coding basics, projects, and communication.</p>
+        </div>
+        <div class="card card-pad" style="background: var(--bg-elevated);">
+          <h3 style="margin-bottom: var(--space-3); color: var(--text-primary);">Previous Questions</h3>
+          <ul style="color: var(--text-secondary); line-height: 1.8;">
+            ${previousQuestions.map(item => `<li>• ${item}</li>`).join('')}
+          </ul>
+        </div>
+      </div>
+    `);
   };
 
   window.showCompaniesGrid = function() {

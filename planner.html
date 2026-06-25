@@ -4,6 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Study Planner — CareerCopilot</title>
+<link rel=icon href=favicon.svg type=image/svg+xml>
+
 <link rel="stylesheet" href="css/designsystem.css">
 <link rel="stylesheet" href="css/appshell.css">
 <link rel="stylesheet" href="css/app.css">
@@ -50,42 +52,147 @@
     </header>
 
     <div class="content">
-      <!-- Settings Card -->
-      <div class="card card-pad mb-6">
-        <h3 style="margin-bottom: var(--space-4);">Planner Settings</h3>
-        <div class="content-grid-3">
-          <div class="form-group">
-            <label class="form-label">Placement Date</label>
-            <input type="date" class="form-input" id="placement-date">
-          </div>
-          <div class="form-group">
-            <label class="form-label">Daily Study Hours</label>
-            <select class="form-select" id="daily-hours">
-              <option value="2">2 hours</option>
-              <option value="3">3 hours</option>
-              <option value="4" selected>4 hours</option>
-              <option value="5">5 hours</option>
-              <option value="6">6+ hours</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label class="form-label">Focus Areas</label>
-            <select class="form-select" id="focus-areas">
-              <option value="balanced">Balanced</option>
-              <option value="dsa-heavy">DSA Heavy</option>
-              <option value="aptitude-heavy">Aptitude Heavy</option>
-            </select>
-          </div>
+      <div class="planner-hero card card-pad mb-6">
+        <div>
+          <span class="badge badge-primary">Placement Planner</span>
+          <h2><span data-profile-name>Student</span>'s Dashboard</h2>
+          <p>Good luck with your <span data-profile-dream-company>dream company</span> preparation.</p>
         </div>
-        <button class="btn btn-primary mt-4" onclick="saveSettings()">Save Settings</button>
+        <div class="planner-countdown">
+          <span id="planner-countdown">--</span>
+          <small>days to placement</small>
+        </div>
       </div>
 
-      <!-- Weekly Plan -->
-      <div class="card card-pad">
-        <h3 style="margin-bottom: var(--space-4);">Weekly Study Plan</h3>
-        <div class="flex-col gap-4" id="weekly-plan">
-          <!-- Weekly plan will be rendered here -->
+      <div class="content-grid-3 mb-6">
+        <div class="card card-pad">
+          <div class="stat-card-label">Tasks Completed</div>
+          <div class="stat-card-value" id="planner-completed">0/0</div>
+          <div class="progress-bar mt-3"><div class="progress-fill success" id="planner-progress" style="width:0%;"></div></div>
         </div>
+        <div class="card card-pad">
+          <div class="stat-card-label">Weekly Goal</div>
+          <p id="weekly-goal-text">Set a focused weekly target.</p>
+        </div>
+        <div class="card card-pad">
+          <div class="stat-card-label">Monthly Goal</div>
+          <p id="monthly-goal-text">Set a monthly preparation milestone.</p>
+        </div>
+      </div>
+
+      <div class="card card-pad mb-6">
+        <div class="panel-head">
+          <div>
+            <h3>AI Career Roadmap</h3>
+            <p class="text-muted">Generate a personalized placement plan using your profile, skills, and deadline.</p>
+          </div>
+          <span class="badge badge-primary" id="roadmap-progress-badge">0% complete</span>
+        </div>
+        <div class="planner-form-grid roadmap-form">
+          <div class="form-group">
+            <label class="form-label">Target Role</label>
+            <select class="form-select" id="roadmap-role">
+              <option>Software Developer</option>
+              <option>Frontend Developer</option>
+              <option>Data Analyst</option>
+              <option>AI Engineer</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Current Skill Level</label>
+            <select class="form-select" id="roadmap-level">
+              <option>Beginner</option>
+              <option>Intermediate</option>
+              <option>Advanced</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Placement Deadline</label>
+            <input type="date" class="form-input" id="roadmap-deadline">
+          </div>
+          <div class="form-group">
+            <label class="form-label">&nbsp;</label>
+            <button class="btn btn-primary btn-block" type="button" onclick="generateCareerRoadmap()">Generate Roadmap</button>
+          </div>
+        </div>
+        <div id="career-roadmap-output" class="career-roadmap-output mt-4"></div>
+      </div>
+
+      <div class="card card-pad mb-6">
+        <div class="panel-head">
+          <h3>Add Task</h3>
+          <span class="badge badge-muted" id="task-summary">0 tasks</span>
+        </div>
+        <form id="task-form" onsubmit="return submitTask(event)">
+          <input type="hidden" id="task-id">
+          <div class="planner-form-grid">
+            <div class="form-group">
+              <label class="form-label">Task</label>
+              <input type="text" class="form-input" id="task-title" placeholder="Solve 5 array problems" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Focus Area</label>
+              <select class="form-select" id="task-area">
+                <option value="DSA">DSA</option>
+                <option value="Aptitude">Aptitude</option>
+                <option value="Interview">Interview</option>
+                <option value="Resume">Resume</option>
+                <option value="Projects">Projects</option>
+                <option value="Revision">Revision</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Priority</label>
+              <select class="form-select" id="task-priority">
+                <option value="high">High</option>
+                <option value="medium" selected>Medium</option>
+                <option value="low">Low</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Due Date</label>
+              <input type="date" class="form-input" id="task-date">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Status</label>
+              <select class="form-select" id="task-status">
+                <option value="todo">To Do</option>
+                <option value="inprogress">In Progress</option>
+                <option value="completed">Completed</option>
+              </select>
+            </div>
+          </div>
+          <div class="content-grid-2 mt-4">
+            <div class="form-group">
+              <label class="form-label">Weekly Goals</label>
+              <input class="form-input" id="weekly-goal" placeholder="This week's target">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Monthly Goals</label>
+              <input class="form-input" id="monthly-goal" placeholder="This month's target">
+            </div>
+          </div>
+          <div class="flex gap-2 mt-4">
+            <button type="submit" class="btn btn-primary" id="task-submit-btn">Add Task</button>
+            <button type="button" class="btn btn-ghost" id="task-cancel-btn" onclick="cancelEditTask()" style="display:none;">Cancel</button>
+            <button type="button" class="btn btn-secondary" onclick="saveGoals()">Save Goals</button>
+          </div>
+        </form>
+      </div>
+
+      <div class="planner-board" id="planner-board">
+        <section class="planner-column" data-status="todo">
+          <div class="planner-column-head"><h3>To Do</h3><span id="count-todo">0</span></div>
+          <div class="planner-dropzone" id="column-todo"></div>
+        </section>
+        <section class="planner-column" data-status="inprogress">
+          <div class="planner-column-head"><h3>In Progress</h3><span id="count-inprogress">0</span></div>
+          <div class="planner-dropzone" id="column-inprogress"></div>
+        </section>
+        <section class="planner-column" data-status="completed">
+          <div class="planner-column-head"><h3>Completed</h3><span id="count-completed">0</span></div>
+          <div class="planner-dropzone" id="column-completed"></div>
+        </section>
       </div>
     </div>
   </main>
@@ -95,6 +202,7 @@
 <script src="js/data.js"></script>
 <script src="js/theme.js"></script>
 <script src="js/main.js"></script>
+<script src="js/onboarding.js"></script>
 <script src="js/chatbot.js"></script>
 <script src="js/chatbot-ui.js"></script>
 <script src="js/planner.js"></script>

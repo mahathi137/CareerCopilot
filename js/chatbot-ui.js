@@ -42,9 +42,11 @@
       </div>
     </div>
     <div class="chatbot-suggestions">
-      <button class="suggestion-chip">How to start DSA?</button>
-      <button class="suggestion-chip">Interview tips</button>
-      <button class="suggestion-chip">Resume help</button>
+      <button class="suggestion-chip">DSA Roadmap</button>
+      <button class="suggestion-chip">Interview Preparation</button>
+      <button class="suggestion-chip">Resume Tips</button>
+      <button class="suggestion-chip">Company Preparation</button>
+      <button class="suggestion-chip">Coding Help</button>
     </div>
     <div class="chatbot-input-area">
       <div class="chatbot-input-row">

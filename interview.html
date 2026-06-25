@@ -4,6 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Interview Prep — CareerCopilot</title>
+<link rel=icon href=favicon.svg type=image/svg+xml>
+
 <link rel="stylesheet" href="css/designsystem.css">
 <link rel="stylesheet" href="css/appshell.css">
 <link rel="stylesheet" href="css/app.css">
@@ -74,6 +76,47 @@
         </div>
       </div>
 
+      <div class="card card-pad mb-6">
+        <div class="panel-head">
+          <div>
+            <h3>AI Mock Interview Simulator</h3>
+            <p class="text-muted">Practice technical, HR, or manager rounds with instant structured feedback.</p>
+          </div>
+          <span class="badge badge-primary" id="mock-history-count">0 sessions</span>
+        </div>
+        <div class="planner-form-grid mock-form-grid">
+          <div class="form-group">
+            <label class="form-label">Interview Type</label>
+            <select class="form-select" id="mock-type">
+              <option>Technical Interview</option>
+              <option>HR Interview</option>
+              <option>Managerial Interview</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Company</label>
+            <select class="form-select" id="mock-company">
+              <option>TCS</option>
+              <option>Infosys</option>
+              <option>Accenture</option>
+              <option>Wipro</option>
+              <option>Cognizant</option>
+              <option>Capgemini</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">&nbsp;</label>
+            <button class="btn btn-primary btn-block" type="button" onclick="startMockInterview()">Start Interview</button>
+          </div>
+        </div>
+        <div id="mock-interview-panel" class="mock-interview-panel mt-4"></div>
+        <div id="mock-feedback-panel" class="mock-feedback-panel mt-4"></div>
+        <div class="mt-4">
+          <h4>Interview Score History</h4>
+          <div id="mock-history-list" class="mock-history-list"></div>
+        </div>
+      </div>
+
       <!-- Category Tabs -->
       <div class="tab-bar">
         <button class="tab-item active" data-category="hr">HR Questions</button>
@@ -93,6 +136,7 @@
 <script src="js/data.js"></script>
 <script src="js/theme.js"></script>
 <script src="js/main.js"></script>
+<script src="js/onboarding.js"></script>
 <script src="js/chatbot.js"></script>
 <script src="js/chatbot-ui.js"></script>
 <script src="js/interview.js"></script>

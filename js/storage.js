@@ -82,8 +82,13 @@ const UserProfile = {
     return Storage.get(this.KEY, {
       name: 'Student',
       email: '',
+      college: '',
+      graduationYear: '',
+      targetRole: '',
+      dreamCompany: 'TCS',
       targetCompany: 'TCS',
       placementDate: '',
+      skills: [],
       dailyHours: 4,
       rank: 'Beginner',
       xp: 0,
@@ -95,7 +100,27 @@ const UserProfile = {
 
   set(data) {
     const current = this.get();
-    Storage.set(this.KEY, { ...current, ...data });
+    const next = { ...current, ...data };
+    if (typeof next.skills === 'string') {
+      next.skills = next.skills.split(',').map(skill => skill.trim()).filter(Boolean);
+    }
+    if (next.dreamCompany && !data.targetCompany) next.targetCompany = next.dreamCompany;
+    if (next.targetCompany && !data.dreamCompany) next.dreamCompany = next.targetCompany;
+    Storage.set(this.KEY, next);
+  },
+
+  isComplete(profile = this.get()) {
+    return Boolean(
+      profile &&
+      profile.name &&
+      profile.name !== 'Student' &&
+      profile.email &&
+      profile.targetRole &&
+      profile.placementDate &&
+      (profile.targetCompany || profile.dreamCompany) &&
+      Array.isArray(profile.skills) &&
+      profile.skills.length
+    );
   },
 
   addXP(amount) {
@@ -249,6 +274,66 @@ const PlannerState = {
     checks[key] = !checks[key];
     Storage.set('planner_checks', checks);
     return checks[key];
+      },
+ 
+  // ---- Custom study tasks (CRUD) ----
+  getTasks() {
+    return Storage.get('planner_tasks', []);
+  },
+  addTask(task) {
+    const tasks = this.getTasks();
+    const newTask = {
+      id: 't_' + Date.now() + '_' + Math.floor(Math.random() * 1000),
+      title: task.title,
+      area: task.area || 'DSA',
+      date: task.date || '',
+      priority: task.priority || 'medium',
+      status: task.status || 'todo',
+      hours: task.hours || 1,
+      done: false,
+      created: new Date().toISOString()
+    };
+    tasks.push(newTask);
+    Storage.set('planner_tasks', tasks);
+    return newTask;
+  },
+  updateTask(id, updates) {
+    const tasks = this.getTasks();
+    const idx = tasks.findIndex(t => t.id === id);
+    if (idx === -1) return null;
+    tasks[idx] = { ...tasks[idx], ...updates };
+    Storage.set('planner_tasks', tasks);
+    return tasks[idx];
+  },
+  deleteTask(id) {
+    const tasks = this.getTasks().filter(t => t.id !== id);
+    Storage.set('planner_tasks', tasks);
+  },
+  toggleTask(id) {
+    const tasks = this.getTasks();
+    const task = tasks.find(t => t.id === id);
+    if (!task) return;
+    task.done = !task.done;
+    Storage.set('planner_tasks', tasks);
+    return task.done;
+  },
+  moveTask(id, status) {
+    const tasks = this.getTasks();
+    const task = tasks.find(t => t.id === id);
+    if (!task) return null;
+    task.status = status;
+    task.done = status === 'completed';
+    Storage.set('planner_tasks', tasks);
+    return task;
+  },
+  getGoals() {
+    return Storage.get('planner_goals', {
+      weekly: 'Solve 10 coding problems, complete 3 aptitude sets, and revise interview answers.',
+      monthly: 'Finish core DSA, polish resume, and complete two company-specific roadmaps.'
+    });
+  },
+  setGoals(data) {
+    Storage.set('planner_goals', { ...this.getGoals(), ...data });
   }
 };
 

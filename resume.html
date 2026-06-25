@@ -3,7 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Resume Master — CareerCopilot</title>
+<title>Resume Master - CareerCopilot</title>
+<link rel=icon href=favicon.svg type=image/svg+xml>
+
 <link rel="stylesheet" href="css/designsystem.css">
 <link rel="stylesheet" href="css/appshell.css">
 <link rel="stylesheet" href="css/app.css">
@@ -11,26 +13,25 @@
 </head>
 <body>
 <div class="app">
-
   <div class="sidebar-overlay"></div>
   <aside class="sidebar">
     <a href="index.html" class="brand"><span class="brand-mark">CC</span> CareerCopilot</a>
     <nav class="side-nav">
-      <a href="dashboard.html" class="side-link"><span class="ic">🏠</span> Dashboard</a>
-      <a href="coding.html" class="side-link"><span class="ic">💻</span> Coding Practice</a>
-      <a href="aptitude.html" class="side-link"><span class="ic">🧮</span> Aptitude Hub</a>
-      <a href="interview.html" class="side-link"><span class="ic">🎤</span> Interview Prep</a>
-      <a href="resume.html" class="side-link active"><span class="ic">📄</span> Resume Master</a>
-      <a href="companies.html" class="side-link"><span class="ic">🏢</span> Company Prep</a>
-      <a href="planner.html" class="side-link"><span class="ic">🗓️</span> Study Planner</a>
-      <a href="achievements.html" class="side-link"><span class="ic">🏅</span> Achievements</a>
-      <a href="analytics.html" class="side-link"><span class="ic">📊</span> Analytics</a>
-      <a href="settings.html" class="side-link"><span class="ic">⚙️</span> Settings</a>
+      <a href="dashboard.html" class="side-link"><span class="ic">Home</span> Dashboard</a>
+      <a href="coding.html" class="side-link"><span class="ic">Code</span> Coding Practice</a>
+      <a href="aptitude.html" class="side-link"><span class="ic">Math</span> Aptitude Hub</a>
+      <a href="interview.html" class="side-link"><span class="ic">Talk</span> Interview Prep</a>
+      <a href="resume.html" class="side-link active"><span class="ic">CV</span> Resume Master</a>
+      <a href="companies.html" class="side-link"><span class="ic">Co</span> Company Prep</a>
+      <a href="planner.html" class="side-link"><span class="ic">Plan</span> Study Planner</a>
+      <a href="achievements.html" class="side-link"><span class="ic">Win</span> Achievements</a>
+      <a href="analytics.html" class="side-link"><span class="ic">Data</span> Analytics</a>
+      <a href="settings.html" class="side-link"><span class="ic">Set</span> Settings</a>
     </nav>
     <div class="side-foot">
       <div class="side-user">
-        <div class="avatar" id="side-avatar">AS</div>
-        <div class="meta"><b id="side-name">Aman Sharma</b><span id="side-rank">Beginner Explorer</span></div>
+        <div class="avatar" id="side-avatar">S</div>
+        <div class="meta"><b id="side-name">Student</b><span id="side-rank">Beginner</span></div>
       </div>
     </div>
   </aside>
@@ -38,123 +39,112 @@
   <main class="main">
     <header class="topbar">
       <div class="flex items-center gap-16">
-        <button class="menu-toggle btn-icon">☰</button>
+        <button class="menu-toggle btn-icon">Menu</button>
         <div>
           <h1>Resume Master</h1>
-          <div class="topbar-sub">Build a perfect resume with our interactive checklist</div>
+          <div class="topbar-sub">AI-style resume analysis, ATS scoring, and company targeting</div>
         </div>
       </div>
-      <div class="topbar-actions">
-        <button class="theme-toggle" aria-label="Toggle theme"></button>
-      </div>
+      <div class="topbar-actions"><button class="theme-toggle" aria-label="Toggle theme"></button></div>
     </header>
 
     <div class="content">
-      <!-- Upload Section -->
-      <div class="card card-pad mb-6">
-        <h3 style="margin-bottom: var(--space-4);">Upload Your Resume</h3>
-        <div id="upload-area" style="border: 2px dashed var(--border); border-radius: var(--radius-lg); padding: var(--space-8); text-align: center; cursor: pointer; transition: all var(--transition-base);">
-          <div style="font-size: 3rem; margin-bottom: var(--space-4);">📄</div>
-          <p style="color: var(--text-secondary); margin-bottom: var(--space-4);">Drag and drop your resume here, or click to browse</p>
-          <p style="color: var(--text-muted); font-size: var(--text-sm);">Supported formats: PDF, DOCX (Max 5MB)</p>
-          <input type="file" id="resume-upload" accept=".pdf,.docx" style="display: none;">
-        </div>
-        <div id="upload-status" style="margin-top: var(--space-4); display: none;">
-          <div class="flex items-center gap-3">
-            <div style="font-size: 2rem;">✓</div>
+      <section class="resume-dashboard">
+        <div class="card card-pad resume-upload-panel">
+          <div class="panel-head">
             <div>
-              <div style="font-weight: 600; color: var(--text-primary);" id="uploaded-filename">resume.pdf</div>
-              <div style="font-size: var(--text-sm); color: var(--text-muted);" id="upload-date">Uploaded just now</div>
+              <h3>Upload Resume</h3>
+              <p class="text-muted">Upload a PDF or TXT resume for content-based ATS analysis.</p>
             </div>
-            <button class="btn btn-sm btn-danger" onclick="removeResume()" style="margin-left: auto;">Remove</button>
+            <span class="badge badge-primary">ATS Ready</span>
           </div>
+          <div class="resume-start-cta">
+            <div>
+              <h3>Don't have a resume yet?</h3>
+              <p>Create a polished resume from scratch and return here to analyze it with ATS-ready suggestions.</p>
+            </div>
+            <a class="btn btn-secondary btn-lg" href="https://tryresumepilot.netlify.app/" target="_blank" rel="noopener noreferrer">Create Resume</a>
+          </div>
+          <div id="upload-area" class="resume-dropzone">
+            <strong>Drop resume here or click to browse</strong>
+            <span>PDF or TXT up to 5MB</span>
+            <input type="file" id="resume-upload" accept=".pdf,.txt" hidden>
+          </div>
+          <div id="upload-status" class="resume-upload-status" style="display:none;">
+            <div>
+              <strong id="uploaded-filename">resume.pdf</strong>
+              <span id="upload-date">Uploaded just now</span>
+            </div>
+            <button class="btn btn-sm btn-danger" onclick="removeResume()">Remove</button>
+          </div>
+          <button class="btn btn-primary mt-4" id="analyze-resume-btn">Analyze Resume</button>
         </div>
-      </div>
 
-      <!-- Analysis Results -->
-      <div id="analysis-results" style="display: none;">
+        <div class="card card-pad resume-score-panel">
+          <span class="stat-label">ATS Score</span>
+          <div class="score-ring-wrap" style="width:170px;height:170px;margin:var(--space-4) auto;">
+            <svg width="170" height="170">
+              <circle class="score-ring-bg" cx="85" cy="85" r="68" stroke-width="13"></circle>
+              <circle class="score-ring-fill" id="ats-ring" cx="85" cy="85" r="68" stroke-width="13" stroke="#10B981" stroke-dasharray="427" stroke-dashoffset="427"></circle>
+            </svg>
+            <div class="score-ring-label"><b id="ats-score">--</b><span>ATS</span></div>
+          </div>
+          <p id="resume-score-summary" class="text-muted">Upload and analyze a resume to generate a dynamic score.</p>
+        </div>
+      </section>
+
+      <section id="analysis-empty" class="card card-pad resume-empty-state">
+        <h3>No analysis yet</h3>
+        <p>Results will appear after a resume is uploaded and analyzed. Strengths, improvements, detected sections, and company suggestions are generated from the resume content.</p>
+      </section>
+
+      <section id="analysis-results" style="display:none;">
+        <div class="content-grid-3 mb-6" id="section-grid"></div>
+
+        <div class="card card-pad mb-6">
+          <div class="panel-head"><h3>Extracted Resume Details</h3></div>
+          <div class="resume-details-grid" id="resume-details-grid"></div>
+        </div>
+
         <div class="content-grid-2 mb-6">
           <div class="card card-pad">
-            <h3 style="margin-bottom: var(--space-4);">Resume Score</h3>
-            <div class="score-ring-wrap" style="width: 150px; height: 150px; margin: 0 auto;">
-              <svg width="150" height="150">
-                <circle class="score-ring-bg" cx="75" cy="75" r="60" stroke-width="12"></circle>
-                <circle class="score-ring-fill" id="analysis-resume-ring" cx="75" cy="75" r="60" stroke-width="12" stroke="#10B981" stroke-dasharray="377" stroke-dashoffset="377"></circle>
-              </svg>
-              <div class="score-ring-label">
-                <b id="analysis-resume-score" style="font-size: var(--text-3xl);">0%</b>
-                <span>SCORE</span>
-              </div>
-            </div>
+            <div class="panel-head"><h3>Strengths</h3></div>
+            <div id="resume-strengths" class="insight-list"></div>
           </div>
-          
           <div class="card card-pad">
-            <h3 style="margin-bottom: var(--space-4);">ATS Score</h3>
-            <div class="score-ring-wrap" style="width: 150px; height: 150px; margin: 0 auto;">
-              <svg width="150" height="150">
-                <circle class="score-ring-bg" cx="75" cy="75" r="60" stroke-width="12"></circle>
-                <circle class="score-ring-fill" id="ats-ring" cx="75" cy="75" r="60" stroke-width="12" stroke="#6366F1" stroke-dasharray="377" stroke-dashoffset="377"></circle>
-              </svg>
-              <div class="score-ring-label">
-                <b id="ats-score" style="font-size: var(--text-3xl);">0%</b>
-                <span>ATS SCORE</span>
-              </div>
-            </div>
+            <div class="panel-head"><h3>Improvements</h3></div>
+            <div id="resume-improvements" class="insight-list"></div>
           </div>
         </div>
 
-        <div class="card card-pad mb-6">
-          <h3 style="margin-bottom: var(--space-4);">Extracted Information</h3>
-          <div class="content-grid-2">
-            <div>
-              <h4 style="margin-bottom: var(--space-2); font-size: var(--text-sm); color: var(--text-muted);">Skills Detected</h4>
-              <div id="extracted-skills" class="flex flex-wrap gap-2">
-                <!-- Skills will be rendered here -->
-              </div>
-            </div>
-            <div>
-              <h4 style="margin-bottom: var(--space-2); font-size: var(--text-sm); color: var(--text-muted);">Education</h4>
-              <div id="extracted-education" style="color: var(--text-secondary);">
-                <!-- Education will be rendered here -->
-              </div>
-            </div>
+        <div class="content-grid-2 mb-6">
+          <div class="card card-pad">
+            <div class="panel-head"><h3>Detected Skills</h3></div>
+            <div id="extracted-skills" class="flex flex-wrap gap-2"></div>
+          </div>
+          <div class="card card-pad">
+            <div class="panel-head"><h3>Company Targeting</h3></div>
+            <select class="form-select" id="company-target-select">
+              <option>TCS</option>
+              <option>Infosys</option>
+              <option>Accenture</option>
+              <option>Wipro</option>
+              <option>Cognizant</option>
+              <option>Capgemini</option>
+            </select>
+            <div id="company-resume-suggestions" class="insight-list mt-4"></div>
           </div>
         </div>
 
-        <div class="card card-pad mb-6">
-          <h3 style="margin-bottom: var(--space-4);">Missing Sections</h3>
-          <div id="missing-sections" class="flex-col gap-2">
-            <!-- Missing sections will be rendered here -->
+        <div class="card card-pad">
+          <div class="panel-head"><h3>Resume Bullet Improver</h3></div>
+          <div class="resume-bullet-tool">
+            <input class="form-input" id="bullet-input" placeholder="Created a website">
+            <button class="btn btn-primary" id="improve-bullet-btn">Improve Bullet</button>
           </div>
+          <div id="bullet-output" class="resume-bullet-output">Improved bullet will appear here.</div>
         </div>
-
-        <div class="card card-pad mb-6">
-          <h3 style="margin-bottom: var(--space-4);">Improvement Suggestions</h3>
-          <div id="improvement-suggestions" class="flex-col gap-3">
-            <!-- Suggestions will be rendered here -->
-          </div>
-        </div>
-      </div>
-
-      <!-- Score Card -->
-      <div class="card card-pad mb-6" style="text-align: center;">
-        <div class="score-ring-wrap" style="width: 200px; height: 200px; margin: 0 auto;">
-          <svg width="200" height="200">
-            <circle class="score-ring-bg" cx="100" cy="100" r="85" stroke-width="15"></circle>
-            <circle class="score-ring-fill" id="resume-ring" cx="100" cy="100" r="85" stroke-width="15" stroke="#10B981" stroke-dasharray="534" stroke-dashoffset="534"></circle>
-          </svg>
-          <div class="score-ring-label">
-            <b id="resume-score" style="font-size: var(--text-4xl);">0%</b>
-            <span>RESUME SCORE</span>
-          </div>
-        </div>
-        <p class="text-muted mt-4">Complete the checklist below to improve your resume score</p>
-      </div>
-
-      <!-- Checklist Sections -->
-      <div class="content-grid-3" id="resume-checklist">
-        <!-- Checklist items will be rendered here -->
-      </div>
+      </section>
     </div>
   </main>
 </div>
@@ -163,8 +153,10 @@
 <script src="js/data.js"></script>
 <script src="js/theme.js"></script>
 <script src="js/main.js"></script>
+<script src="js/onboarding.js"></script>
 <script src="js/chatbot.js"></script>
 <script src="js/chatbot-ui.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 <script src="js/resume.js"></script>
 </body>
 </html>

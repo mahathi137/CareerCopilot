@@ -4,6 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Coding Practice — CareerCopilot</title>
+<link rel=icon href=favicon.svg type=image/svg+xml>
+
 <link rel="stylesheet" href="css/designsystem.css">
 <link rel="stylesheet" href="css/appshell.css">
 <link rel="stylesheet" href="css/app.css">
@@ -76,9 +78,9 @@
           </div>
         </div>
 
-        <div class="flex gap-6" style="align-items: flex-start;">
+        <div class="coding-layout">
           <!-- Left Sidebar Filters -->
-          <div class="card" style="width: 280px; padding: var(--space-4); flex-shrink: 0;">
+          <div class="card coding-filter-panel">
             <h3 style="margin-bottom: var(--space-4); font-size: var(--text-base);">Filters</h3>
             
             <!-- Search -->
@@ -176,7 +178,7 @@
       <div id="problem-detail-view" style="display: none;">
         <button class="btn btn-ghost mb-4" onclick="showProblemList()">← Back to Problems</button>
         
-        <div class="flex gap-6" style="align-items: flex-start;">
+        <div class="coding-detail-layout">
           <!-- Problem Description -->
           <div class="card" style="flex: 1; padding: var(--space-6);">
             <div class="flex items-center gap-3 mb-4">
@@ -234,6 +236,12 @@
 
           <!-- Code Editor -->
           <div class="card" style="width: 600px; padding: 0; flex-shrink: 0; display: flex; flex-direction: column;">
+            <div class="coding-tabs">
+              <button class="coding-tab active" type="button">Problem</button>
+              <button class="coding-tab active" type="button">Editor</button>
+              <button class="coding-tab" type="button" onclick="document.getElementById('test-cases-panel').scrollIntoView({behavior:'smooth',block:'nearest'})">Test Cases</button>
+              <button class="coding-tab" type="button" onclick="document.getElementById('output-console').scrollIntoView({behavior:'smooth',block:'nearest'})">Console Output</button>
+            </div>
             <div style="padding: var(--space-4); border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center;">
               <select id="language-select" class="form-select" style="width: auto;">
                 <option value="python">Python</option>
@@ -251,6 +259,15 @@
               <div class="flex gap-3">
                 <button class="btn btn-secondary" onclick="runCode()">▶ Run Code</button>
                 <button class="btn btn-primary" onclick="submitCode()">✓ Submit</button>
+              </div>
+            </div>
+            <div id="test-cases-panel" style="padding: var(--space-4); border-top: 1px solid var(--border);">
+              <div class="flex justify-between items-center mb-2">
+                <h4 style="font-size: var(--text-sm); margin: 0;">Test Cases</h4>
+                <span class="badge badge-muted">Sample + hidden on submit</span>
+              </div>
+              <div id="test-cases-list" class="flex-col gap-2">
+                Select a problem to preview sample tests.
               </div>
             </div>
             

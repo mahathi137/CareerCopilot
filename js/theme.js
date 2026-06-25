@@ -7,6 +7,8 @@
     document.documentElement.setAttribute('data-theme', theme);
     document.querySelectorAll('.theme-toggle').forEach(t=>{
       t.setAttribute('aria-pressed', theme === 'dark');
+      t.setAttribute('title', theme === 'dark' ? 'Dark mode' : 'Light mode');
+      t.textContent = theme === 'dark' ? '☾' : '☀';
     });
   }
 

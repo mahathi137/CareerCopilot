@@ -4,6 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Dashboard — CareerCopilot</title>
+<link rel=icon href=favicon.svg type=image/svg+xml>
+
 <link rel="stylesheet" href="css/designsystem.css">
 <link rel="stylesheet" href="css/appshell.css">
 <link rel="stylesheet" href="css/app.css">
@@ -75,8 +77,8 @@
             <div class="stat-icon" style="background:rgba(16,185,129,.12); color:#10B981;">❤️</div>
             <span class="stat-delta delta-up">Live</span>
           </div>
-          <div class="stat-value" id="stat-health">0%</div>
-          <div class="stat-label">Career Health Score</div>
+          <div class="stat-value" id="stat-dsa-solved">0</div>
+          <div class="stat-label">DSA Problems Solved</div>
         </div>
         <div class="card stat-card reveal">
           <div class="stat-top">
@@ -93,6 +95,48 @@
           </div>
           <div class="stat-value" id="stat-countdown">--</div>
           <div class="stat-label">Days to Placement</div>
+        </div>
+      </div>
+
+      <div class="content-grid-3 mb-6">
+        <div class="card card-pad">
+          <div class="panel-head"><h3>Dream Company Tracker</h3></div>
+          <p class="text-muted">Good luck with your <strong data-profile-dream-company>TCS</strong> preparation.</p>
+          <div class="progress-bar mt-3"><div class="progress-fill" id="dream-company-progress" style="width:0%;"></div></div>
+          <p class="text-muted mt-3" id="dream-company-status">Complete preparation modules to strengthen readiness.</p>
+        </div>
+        <div class="card card-pad">
+          <div class="panel-head"><h3>Daily Challenge</h3></div>
+          <strong id="daily-challenge-title">Solve one array problem</strong>
+          <p class="text-muted mt-3" id="daily-challenge-desc">A focused 30-minute task for today.</p>
+          <a href="coding.html" class="btn btn-primary mt-4">Start Challenge</a>
+        </div>
+        <div class="card card-pad">
+          <div class="panel-head"><h3>XP Tracker</h3></div>
+          <div class="stat-value" id="dashboard-xp">0 XP</div>
+          <div class="progress-bar mt-3"><div class="progress-fill warning" id="xp-progress" style="width:0%;"></div></div>
+          <p class="text-muted mt-3" id="xp-next-rank">Earn XP to reach your next rank.</p>
+        </div>
+      </div>
+
+      <div class="content-grid-3 mb-6">
+        <div class="card card-pad">
+          <div class="panel-head"><h3>Resume Score</h3></div>
+          <div class="stat-value" id="dashboard-resume-score">0%</div>
+          <p class="text-muted mt-3">Upload and analyze your resume for ATS-focused suggestions.</p>
+          <a href="resume.html" class="btn btn-ghost mt-4">Open Resume Master</a>
+        </div>
+        <div class="card card-pad">
+          <div class="panel-head"><h3>Career Roadmap Progress</h3></div>
+          <div class="stat-value" id="dashboard-roadmap-progress">0%</div>
+          <p class="text-muted mt-3">Generate a 30-day plan in Study Planner.</p>
+          <a href="planner.html" class="btn btn-ghost mt-4">Open Roadmap</a>
+        </div>
+        <div class="card card-pad">
+          <div class="panel-head"><h3>Interview Preparation</h3></div>
+          <div class="stat-value" id="dashboard-interview-score">0</div>
+          <p class="text-muted mt-3">Practice HR, technical, and manager rounds.</p>
+          <a href="interview.html" class="btn btn-ghost mt-4">Start Mock Interview</a>
         </div>
       </div>
 

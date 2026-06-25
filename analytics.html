@@ -3,7 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Analytics — CareerCopilot</title>
+<title>Analytics - CareerCopilot</title>
+<link rel=icon href=favicon.svg type=image/svg+xml>
+
 <link rel="stylesheet" href="css/designsystem.css">
 <link rel="stylesheet" href="css/appshell.css">
 <link rel="stylesheet" href="css/app.css">
@@ -11,142 +13,59 @@
 </head>
 <body>
 <div class="app">
-
   <div class="sidebar-overlay"></div>
   <aside class="sidebar">
     <a href="index.html" class="brand"><span class="brand-mark">CC</span> CareerCopilot</a>
     <nav class="side-nav">
-      <a href="dashboard.html" class="side-link"><span class="ic">🏠</span> Dashboard</a>
-      <a href="coding.html" class="side-link"><span class="ic">💻</span> Coding Practice</a>
-      <a href="aptitude.html" class="side-link"><span class="ic">🧮</span> Aptitude Hub</a>
-      <a href="interview.html" class="side-link"><span class="ic">🎤</span> Interview Prep</a>
-      <a href="resume.html" class="side-link"><span class="ic">📄</span> Resume Master</a>
-      <a href="companies.html" class="side-link"><span class="ic">🏢</span> Company Prep</a>
-      <a href="planner.html" class="side-link"><span class="ic">🗓️</span> Study Planner</a>
-      <a href="achievements.html" class="side-link"><span class="ic">🏅</span> Achievements</a>
-      <a href="analytics.html" class="side-link active"><span class="ic">📊</span> Analytics</a>
-      <a href="settings.html" class="side-link"><span class="ic">⚙️</span> Settings</a>
+      <a href="dashboard.html" class="side-link"><span class="ic">Home</span> Dashboard</a>
+      <a href="coding.html" class="side-link"><span class="ic">Code</span> Coding Practice</a>
+      <a href="aptitude.html" class="side-link"><span class="ic">Math</span> Aptitude Hub</a>
+      <a href="interview.html" class="side-link"><span class="ic">Talk</span> Interview Prep</a>
+      <a href="resume.html" class="side-link"><span class="ic">CV</span> Resume Master</a>
+      <a href="companies.html" class="side-link"><span class="ic">Co</span> Company Prep</a>
+      <a href="planner.html" class="side-link"><span class="ic">Plan</span> Study Planner</a>
+      <a href="achievements.html" class="side-link"><span class="ic">Win</span> Achievements</a>
+      <a href="analytics.html" class="side-link active"><span class="ic">Data</span> Analytics</a>
+      <a href="settings.html" class="side-link"><span class="ic">Set</span> Settings</a>
     </nav>
-    <div class="side-foot">
-      <div class="side-user">
-        <div class="avatar" id="side-avatar">AS</div>
-        <div class="meta"><b id="side-name">Aman Sharma</b><span id="side-rank">Beginner Explorer</span></div>
-      </div>
-    </div>
+    <div class="side-foot"><div class="side-user"><div class="avatar" id="side-avatar">S</div><div class="meta"><b id="side-name">Student</b><span id="side-rank">Beginner</span></div></div></div>
   </aside>
 
   <main class="main">
     <header class="topbar">
       <div class="flex items-center gap-16">
-        <button class="menu-toggle btn-icon">☰</button>
-        <div>
-          <h1>Analytics</h1>
-          <div class="topbar-sub">Detailed insights into your preparation progress</div>
-        </div>
+        <button class="menu-toggle btn-icon">Menu</button>
+        <div><h1>Analytics</h1><div class="topbar-sub">Professional progress dashboard for placement readiness</div></div>
       </div>
-      <div class="topbar-actions">
-        <button class="theme-toggle" aria-label="Toggle theme"></button>
-      </div>
+      <div class="topbar-actions"><button class="theme-toggle" aria-label="Toggle theme"></button></div>
     </header>
 
     <div class="content">
-      <!-- Achievement Stats -->
-      <div class="card card-pad mb-6" id="achievement-stats">
-        <div class="flex gap-6">
-          <div>
-            <div class="stat-card-value">0/15</div>
-            <div class="text-muted">Badges Earned</div>
-          </div>
-          <div>
-            <div class="stat-card-value">0</div>
-            <div class="text-muted">Total XP</div>
-          </div>
-          <div>
-            <div class="stat-card-value">0</div>
-            <div class="text-muted">Day Streak</div>
-          </div>
-        </div>
+      <div class="stat-grid">
+        <div class="card stat-card"><div class="stat-label">Coding Progress</div><div class="stat-value" id="analytics-coding">0%</div></div>
+        <div class="card stat-card"><div class="stat-label">DSA Problems Solved</div><div class="stat-value" id="analytics-dsa">0</div></div>
+        <div class="card stat-card"><div class="stat-label">Current Streak</div><div class="stat-value" id="analytics-streak">0</div></div>
+        <div class="card stat-card"><div class="stat-label">Placement Readiness Score</div><div class="stat-value" id="analytics-readiness">0%</div></div>
       </div>
 
-      <!-- Weekly Activity Chart -->
-      <div class="card card-pad mb-6">
+      <div class="analytics-grid analytics-grid-clean">
+        <div class="card card-pad analytics-card"><div class="panel-head"><h3>Coding Activity</h3></div><canvas id="coding-activity-chart"></canvas></div>
+        <div class="card card-pad analytics-card"><div class="panel-head"><h3>DSA Topic Completion</h3></div><canvas id="dsa-topic-chart"></canvas></div>
+        <div class="card card-pad analytics-card"><div class="panel-head"><h3>Company Preparation Progress</h3></div><canvas id="company-progress-chart"></canvas></div>
+        <div class="card card-pad analytics-card"><div class="panel-head"><h3>Weekly Performance</h3></div><canvas id="weekly-performance-chart"></canvas></div>
+      </div>
+
+      <div class="card card-pad mt-4">
         <div class="panel-head">
-          <h3>Weekly Activity</h3>
+          <h3>Skill Gap Analyzer</h3>
+          <select id="skill-gap-role" class="form-select" style="max-width:260px;">
+            <option>Frontend Developer</option>
+            <option>Software Developer</option>
+            <option>Data Analyst</option>
+            <option>AI Engineer</option>
+          </select>
         </div>
-        <canvas id="activity-chart" height="200"></canvas>
-      </div>
-
-      <!-- Charts Grid -->
-      <div class="content-grid-3 mb-6">
-        <div class="card card-pad">
-          <h3 style="margin-bottom: var(--space-4);">DSA Progress</h3>
-          <div class="stat-card-value" id="dsa-progress" style="margin-bottom: var(--space-2);">0%</div>
-          <div class="progress-bar">
-            <div class="progress-fill" id="dsa-bar" style="width: 0%;"></div>
-          </div>
-          <p class="text-muted mt-3" style="font-size: var(--text-sm);"><span id="dsa-count">0</span>/40 completed</p>
-        </div>
-        
-        <div class="card card-pad">
-          <h3 style="margin-bottom: var(--space-4);">Aptitude Progress</h3>
-          <div class="stat-card-value" id="aptitude-progress" style="margin-bottom: var(--space-2);">0%</div>
-          <div class="progress-bar">
-            <div class="progress-fill accent" id="aptitude-bar" style="width: 0%;"></div>
-          </div>
-          <p class="text-muted mt-3" style="font-size: var(--text-sm);"><span id="aptitude-count">0</span>/30 completed</p>
-        </div>
-        
-        <div class="card card-pad">
-          <h3 style="margin-bottom: var(--space-4);">Interview Prep</h3>
-          <div class="stat-card-value" id="interview-progress" style="margin-bottom: var(--space-2);">0%</div>
-          <div class="progress-bar">
-            <div class="progress-fill success" id="interview-bar" style="width: 0%;"></div>
-          </div>
-          <p class="text-muted mt-3" style="font-size: var(--text-sm);"><span id="interview-count">0</span>/25 bookmarked</p>
-        </div>
-      </div>
-
-      <!-- Detailed Charts -->
-      <div class="content-grid-2 mb-6">
-        <div class="card card-pad">
-          <h3 style="margin-bottom: var(--space-4);">Coding Progress by Difficulty</h3>
-          <canvas id="coding-progress-chart" height="200"></canvas>
-        </div>
-        
-        <div class="card card-pad">
-          <h3 style="margin-bottom: var(--space-4);">Aptitude Accuracy</h3>
-          <canvas id="aptitude-progress-chart" height="200"></canvas>
-        </div>
-      </div>
-
-      <div class="content-grid-2 mb-6">
-        <div class="card card-pad">
-          <h3 style="margin-bottom: var(--space-4);">Interview Prep Distribution</h3>
-          <canvas id="interview-progress-chart" height="200"></canvas>
-        </div>
-        
-        <div class="card card-pad">
-          <h3 style="margin-bottom: var(--space-4);">Topic Performance</h3>
-          <canvas id="topic-performance-chart" height="200"></canvas>
-        </div>
-      </div>
-
-      <div class="content-grid-2 mb-6">
-        <div class="card card-pad">
-          <h3 style="margin-bottom: var(--space-4);">XP Trend (Weekly)</h3>
-          <canvas id="xp-trend-chart" height="200"></canvas>
-        </div>
-        
-        <div class="card card-pad">
-          <h3 style="margin-bottom: var(--space-4);">Placement Readiness Trend</h3>
-          <canvas id="readiness-trend-chart" height="200"></canvas>
-        </div>
-      </div>
-
-      <!-- Skill Gap Analysis -->
-      <div class="card card-pad">
-        <h3 style="margin-bottom: var(--space-4);">Skill Gap Analysis</h3>
-        <canvas id="skill-gap-chart" height="200"></canvas>
+        <div id="skill-gap-results" class="skill-gap-grid"></div>
       </div>
     </div>
   </main>
@@ -156,6 +75,7 @@
 <script src="js/data.js"></script>
 <script src="js/theme.js"></script>
 <script src="js/main.js"></script>
+<script src="js/onboarding.js"></script>
 <script src="js/chatbot.js"></script>
 <script src="js/chatbot-ui.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
