@@ -155,24 +155,7 @@ Earn badges by completing various milestones:
 - **Streak Legend** - Maintain a 30-day study streak
 - And more...
 
-## 🤝 Contributing
 
-Contributions are welcome! Feel free to:
-- Report bugs
-- Suggest new features
-- Add more DSA problems
-- Improve documentation
-- Fix typos
-
-## 📝 License
-
-This project is licensed under the MIT License.
-
-## 👨‍💻 Author
-
-Created with ❤️ for students preparing for placements.
-
-## 🙏 Acknowledgments
 
 - Chart.js for the beautiful charts
 - All the students who inspired this project
